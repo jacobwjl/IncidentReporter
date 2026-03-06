@@ -1,0 +1,424 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		04A1DFC176640D57D41B273D /* LegalReporterApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC571E3C71BDE8FE580F246E /* LegalReporterApp.swift */; };
+		1897D1128ADA2146B4C22D23 /* ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F84F5C168506C0BEFBC3C5 /* ReportPreviewView.swift */; };
+		228CC06BBA48B5AB468D9F77 /* PrintService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7CD91E637B09784DB92E237 /* PrintService.swift */; };
+		2BA713290CFA450CC43CD90A /* LegalFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2BA1051753C259801DABBA /* LegalFormatting.swift */; };
+		2BA9BD4E4816ABAE4ADA58CA /* ReportEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DEF614BEC49300B0C52EBF2 /* ReportEditorView.swift */; };
+		3C38190B9382B8FF745F04BC /* ICloudDriveBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49AA155FB93D73E3D6E238F1 /* ICloudDriveBrowser.swift */; };
+		3CA34B54BBF681B8053A2A30 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B6CF7D95631528CB7E74AF /* SettingsView.swift */; };
+		6FD73DA15EF52A203DC3780D /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0CC10BF8F73E024157DF46B /* DashboardView.swift */; };
+		821EF9A9A0CC2B6A954585CF /* AttachmentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7929F3F2D6624992FD9D28 /* AttachmentViews.swift */; };
+		9A1611A2BC0CFE4DF681399B /* CaseEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557FA56A807C1E866F9F5DE4 /* CaseEditorView.swift */; };
+		ABFEDD6E92569A8E0830404C /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE49C2CF9215849EBF896DD /* Models.swift */; };
+		BDCC6741D3677F0470DC4332 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0452BA58F319491CD1FB1E9C /* ContentView.swift */; };
+		CEE1315073A9E89B2984D1BB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 43F2BEF9C3FFAEB4DC12CEC8 /* Sparkle */; };
+		FDE3A7B4CE76BEBA5E06A98F /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12C92EB47207FEEF9359E7A /* SidebarView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0452BA58F319491CD1FB1E9C /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		0E2BA1051753C259801DABBA /* LegalFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalFormatting.swift; sourceTree = "<group>"; };
+		1BE49C2CF9215849EBF896DD /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		24F84F5C168506C0BEFBC3C5 /* ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPreviewView.swift; sourceTree = "<group>"; };
+		49AA155FB93D73E3D6E238F1 /* ICloudDriveBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudDriveBrowser.swift; sourceTree = "<group>"; };
+		557FA56A807C1E866F9F5DE4 /* CaseEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseEditorView.swift; sourceTree = "<group>"; };
+		58B6CF7D95631528CB7E74AF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		5DEF614BEC49300B0C52EBF2 /* ReportEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportEditorView.swift; sourceTree = "<group>"; };
+		6A7929F3F2D6624992FD9D28 /* AttachmentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentViews.swift; sourceTree = "<group>"; };
+		765B2562B2DF60501D6D3D1A /* LegalReporter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LegalReporter.entitlements; sourceTree = "<group>"; };
+		B0CC10BF8F73E024157DF46B /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
+		C0F344DCC6F6B2904047AC86 /* LegalReporter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LegalReporter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7CD91E637B09784DB92E237 /* PrintService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintService.swift; sourceTree = "<group>"; };
+		E12C92EB47207FEEF9359E7A /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		EC571E3C71BDE8FE580F246E /* LegalReporterApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalReporterApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2BBF79EE8C3BDD536CB35988 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CEE1315073A9E89B2984D1BB /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		11902C35F9A7B1EB702224E2 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EC571E3C71BDE8FE580F246E /* LegalReporterApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		13BFFEFE940AB907E99DB00B = {
+			isa = PBXGroup;
+			children = (
+				15B0B376863D7513145289D2 /* LegalReporter */,
+				A68CA02E91132C906A30CA67 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		15B0B376863D7513145289D2 /* LegalReporter */ = {
+			isa = PBXGroup;
+			children = (
+				765B2562B2DF60501D6D3D1A /* LegalReporter.entitlements */,
+				11902C35F9A7B1EB702224E2 /* App */,
+				77B7A341D75C318CE6EFC3C0 /* Models */,
+				5E8385EC3850159D4DD532B2 /* Services */,
+				9826A8A5D9E2864AC2B607A8 /* Utilities */,
+				C3358B714A21E1EFE511A9EA /* Views */,
+			);
+			path = LegalReporter;
+			sourceTree = "<group>";
+		};
+		5E8385EC3850159D4DD532B2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C7CD91E637B09784DB92E237 /* PrintService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		77B7A341D75C318CE6EFC3C0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1BE49C2CF9215849EBF896DD /* Models.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9826A8A5D9E2864AC2B607A8 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				0E2BA1051753C259801DABBA /* LegalFormatting.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A68CA02E91132C906A30CA67 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C0F344DCC6F6B2904047AC86 /* LegalReporter.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C3358B714A21E1EFE511A9EA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				6A7929F3F2D6624992FD9D28 /* AttachmentViews.swift */,
+				557FA56A807C1E866F9F5DE4 /* CaseEditorView.swift */,
+				0452BA58F319491CD1FB1E9C /* ContentView.swift */,
+				B0CC10BF8F73E024157DF46B /* DashboardView.swift */,
+				49AA155FB93D73E3D6E238F1 /* ICloudDriveBrowser.swift */,
+				5DEF614BEC49300B0C52EBF2 /* ReportEditorView.swift */,
+				24F84F5C168506C0BEFBC3C5 /* ReportPreviewView.swift */,
+				58B6CF7D95631528CB7E74AF /* SettingsView.swift */,
+				E12C92EB47207FEEF9359E7A /* SidebarView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1431A8CC0816768D0B308344 /* LegalReporter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 95C326F543FCFF461670DD30 /* Build configuration list for PBXNativeTarget "LegalReporter" */;
+			buildPhases = (
+				6C1E9D4B34DA307DA8D0862A /* Sources */,
+				2BBF79EE8C3BDD536CB35988 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LegalReporter;
+			packageProductDependencies = (
+				43F2BEF9C3FFAEB4DC12CEC8 /* Sparkle */,
+			);
+			productName = LegalReporter;
+			productReference = C0F344DCC6F6B2904047AC86 /* LegalReporter.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5B5A1CA38B51742CB7FBD39A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 59271242314010D63F4E27A4 /* Build configuration list for PBXProject "LegalReporter" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 13BFFEFE940AB907E99DB00B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				02F8F8D0EA59023B5A8AF076 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = A68CA02E91132C906A30CA67 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1431A8CC0816768D0B308344 /* LegalReporter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6C1E9D4B34DA307DA8D0862A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				821EF9A9A0CC2B6A954585CF /* AttachmentViews.swift in Sources */,
+				9A1611A2BC0CFE4DF681399B /* CaseEditorView.swift in Sources */,
+				BDCC6741D3677F0470DC4332 /* ContentView.swift in Sources */,
+				6FD73DA15EF52A203DC3780D /* DashboardView.swift in Sources */,
+				3C38190B9382B8FF745F04BC /* ICloudDriveBrowser.swift in Sources */,
+				2BA713290CFA450CC43CD90A /* LegalFormatting.swift in Sources */,
+				04A1DFC176640D57D41B273D /* LegalReporterApp.swift in Sources */,
+				ABFEDD6E92569A8E0830404C /* Models.swift in Sources */,
+				228CC06BBA48B5AB468D9F77 /* PrintService.swift in Sources */,
+				2BA9BD4E4816ABAE4ADA58CA /* ReportEditorView.swift in Sources */,
+				1897D1128ADA2146B4C22D23 /* ReportPreviewView.swift in Sources */,
+				3CA34B54BBF681B8053A2A30 /* SettingsView.swift in Sources */,
+				FDE3A7B4CE76BEBA5E06A98F /* SidebarView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8467CEB08A90A5A422D05327 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LegalReporter/LegalReporter.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "LegalReporter needs access to Mail.app to browse and import emails as exhibits.";
+				INFOPLIST_KEY_SUFeedURL = "https://yourserver.com/appcast.xml";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacob.LegalReporter;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		A7A2793DDC750389F3A06254 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		D187923844BAFB152632782A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		E24777F49D13116EBB6C5057 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = LegalReporter/LegalReporter.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_APP_SANDBOX = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSAppleEventsUsageDescription = "LegalReporter needs access to Mail.app to browse and import emails as exhibits.";
+				INFOPLIST_KEY_SUFeedURL = "https://yourserver.com/appcast.xml";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jacob.LegalReporter;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		59271242314010D63F4E27A4 /* Build configuration list for PBXProject "LegalReporter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7A2793DDC750389F3A06254 /* Debug */,
+				D187923844BAFB152632782A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		95C326F543FCFF461670DD30 /* Build configuration list for PBXNativeTarget "LegalReporter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8467CEB08A90A5A422D05327 /* Debug */,
+				E24777F49D13116EBB6C5057 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		02F8F8D0EA59023B5A8AF076 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		43F2BEF9C3FFAEB4DC12CEC8 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 02F8F8D0EA59023B5A8AF076 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 5B5A1CA38B51742CB7FBD39A /* Project object */;
+}
