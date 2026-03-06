@@ -31,7 +31,8 @@ targets:
         CODE_SIGN_ENTITLEMENTS: LegalReporter/LegalReporter.entitlements
         ENABLE_APP_SANDBOX: NO
         MACOSX_DEPLOYMENT_TARGET: "14.0"
-        INFOPLIST_KEY_SUFeedURL: "https://yourserver.com/appcast.xml"
+        INFOPLIST_KEY_SUFeedURL: "https://raw.githubusercontent.com/jacobwjl/LegalReporter/main/appcast.xml"
+        INFOPLIST_KEY_SUPublicEDKey: "8FqpDLY71qsdRL5QSh71eYH3hdbqwO3UzyyoSTewhRg="
       configs:
         debug:
           CODE_SIGN_IDENTITY: "-"

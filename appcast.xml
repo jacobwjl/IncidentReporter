@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>LegalReporter Changelog</title>
+    <language>en</language>
+    <item>
+      <title>Version 1.0</title>
+      <pubDate>Fri, 06 Mar 2026 09:18:51 -0500</pubDate>
+      <sparkle:version>1.0</sparkle:version>
+      <sparkle:shortVersionString>1.0</sparkle:shortVersionString>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <enclosure
+        url="https://github.com/jacobwjl/LegalReporter/releases/download/v1.0/LegalReporter-1.0.dmg"
+        type="application/octet-stream"
+        sparkle:edSignature="vFT+g59HtecJtVikIY4PKUkmOYKEtnCd1gMgSCw+M4BNUHA3mM91hOddV8O2ELPexRwtLeae5i9aMirZTFqNAA=="
+        length="2468721"
+      />
+    </item>
+  </channel>
+</rss>
