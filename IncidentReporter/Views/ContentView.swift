@@ -4,11 +4,11 @@ import AppKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \LegalCase.modifiedAt, order: .reverse) private var cases: [LegalCase]
+    @Query(sort: \Incident.modifiedAt, order: .reverse) private var incidents: [Incident]
 
-    @State private var selectedCase: LegalCase?
+    @State private var selectedIncident: Incident?
     @State private var selectedReport: Report?
-    @State private var showingNewCase = false
+    @State private var showingNewIncident = false
     @State private var showInspector = false
     @State private var showCommandPalette = false
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
@@ -16,43 +16,43 @@ struct ContentView: View {
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility) {
             SidebarView(
-                selectedCase: $selectedCase,
+                selectedIncident: $selectedIncident,
                 selectedReport: $selectedReport,
-                showingNewCase: $showingNewCase
+                showingNewIncident: $showingNewIncident
             )
-            .navigationSplitViewColumnWidth(min: 220, ideal: 280, max: 340)
+            .navigationSplitViewColumnWidth(min: 190, ideal: 240, max: 300)
         } detail: {
             detailView
-                .frame(minWidth: 480, maxWidth: .infinity, minHeight: 400, maxHeight: .infinity)
+                .frame(minWidth: 380, maxWidth: .infinity, minHeight: 340, maxHeight: .infinity)
                 .clipped()
                 .inspector(isPresented: $showInspector) {
                     if let report = selectedReport {
-                        ReportInspectorView(report: report, legalCase: selectedCase)
-                            .inspectorColumnWidth(min: 240, ideal: 280, max: 360)
-                    } else if let legalCase = selectedCase {
-                        CaseInspectorView(legalCase: legalCase)
-                            .inspectorColumnWidth(min: 240, ideal: 280, max: 360)
+                        ReportInspectorView(report: report, incident: selectedIncident)
+                            .inspectorColumnWidth(min: 200, ideal: 240, max: 320)
+                    } else if let incident = selectedIncident {
+                        IncidentInspectorView(incident: incident)
+                            .inspectorColumnWidth(min: 200, ideal: 240, max: 320)
                     }
                 }
         }
-        .frame(minWidth: 720, minHeight: 480)
-        .sheet(isPresented: $showingNewCase) {
-            CaseEditorView(legalCase: nil) { newCase in
-                modelContext.insert(newCase)
-                selectedCase = newCase
+        .frame(minWidth: 620, minHeight: 440)
+        .sheet(isPresented: $showingNewIncident) {
+            IncidentEditorView(incident: nil) { newIncident in
+                modelContext.insert(newIncident)
+                selectedIncident = newIncident
             }
         }
         .overlay {
             if showCommandPalette {
                 CommandPaletteOverlay(
                     isPresented: $showCommandPalette,
-                    cases: cases,
-                    onSelectCase: { legalCase in
-                        selectedCase = legalCase
+                    incidents: incidents,
+                    onSelectIncident: { incident in
+                        selectedIncident = incident
                         selectedReport = nil
                     },
-                    onSelectReport: { report, legalCase in
-                        selectedCase = legalCase
+                    onSelectReport: { report, incident in
+                        selectedIncident = incident
                         selectedReport = report
                     }
                 )
@@ -67,12 +67,12 @@ struct ContentView: View {
                     .keyboardShortcut("m", modifiers: [.command, .shift])
 
                     Button("Print") {
-                        PrintService.print(report: report, legalCase: selectedCase)
+                        PrintService.print(report: report, incident: selectedIncident)
                     }
                     .keyboardShortcut("p", modifiers: .command)
 
                     Button("Export PDF") {
-                        PrintService.exportPDF(report: report, legalCase: selectedCase)
+                        PrintService.exportPDF(report: report, incident: selectedIncident)
                     }
                     .keyboardShortcut("e", modifiers: [.command, .shift])
                 }
@@ -95,9 +95,9 @@ struct ContentView: View {
     @ViewBuilder
     private var detailView: some View {
         if let report = selectedReport {
-            ReportEditorView(report: report, legalCase: selectedCase)
-        } else if let legalCase = selectedCase {
-            CaseDetailView(legalCase: legalCase, selectedReport: $selectedReport)
+            ReportEditorView(report: report, incident: selectedIncident)
+        } else if let incident = selectedIncident {
+            IncidentDetailView(incident: incident, selectedReport: $selectedReport)
         } else {
             DashboardView()
         }
@@ -125,14 +125,14 @@ struct ContentView: View {
 
 struct ReportInspectorView: View {
     @Bindable var report: Report
-    let legalCase: LegalCase?
+    let incident: Incident?
 
     var body: some View {
         Form {
             Section("Report Info") {
                 LabeledContent("Type", value: report.context.rawValue)
-                LabeledContent("Created", value: report.createdAt.shortLegal)
-                LabeledContent("Modified", value: report.modifiedAt.shortLegal)
+                LabeledContent("Created", value: report.createdAt.shortFormatted)
+                LabeledContent("Modified", value: report.modifiedAt.shortFormatted)
                 LabeledContent("Words", value: "\(report.wordCount)")
                 LabeledContent("Sections", value: "\(report.sections.count)")
                 if report.attachmentCount > 0 {
@@ -145,25 +145,25 @@ struct ReportInspectorView: View {
                 Toggle("Page Numbers", isOn: $report.includePageNumbers)
                 Toggle("Date", isOn: $report.includeDate)
                 Toggle("Bates Numbers", isOn: $report.includeBatesNumbers)
-                TextField("Prepared By", text: $report.preparedBy)
+                TextField("Reported By", text: $report.reportedBy)
                 TextField("Confidentiality", text: $report.confidentialityNotice)
             }
 
-            if let legalCase {
-                Section("Case") {
-                    LabeledContent("Title", value: legalCase.displayTitle)
+            if let incident {
+                Section("Incident") {
+                    LabeledContent("Title", value: incident.displayTitle)
                     HStack(spacing: 6) {
-                        Image(systemName: legalCase.status.icon)
-                            .foregroundStyle(legalCase.status.color)
-                        Text(legalCase.status.rawValue)
+                        Image(systemName: incident.status.icon)
+                            .foregroundStyle(incident.status.color)
+                        Text(incident.status.rawValue)
                     }
-                    if let deadline = legalCase.nextDeadline {
+                    if let deadline = incident.nextDeadline {
                         HStack(spacing: 6) {
                             Image(systemName: deadline.urgencyIcon)
                                 .foregroundStyle(deadline.urgencyColor)
                             Text(deadline.title)
                             Spacer()
-                            Text(deadline.dueDate.shortLegal)
+                            Text(deadline.dueDate.shortFormatted)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -175,59 +175,62 @@ struct ReportInspectorView: View {
     }
 }
 
-// MARK: - Case Inspector
+// MARK: - Incident Inspector
 
-struct CaseInspectorView: View {
-    @Bindable var legalCase: LegalCase
+struct IncidentInspectorView: View {
+    @Bindable var incident: Incident
 
     var body: some View {
         Form {
             Section("Status") {
                 Picker("Status", selection: Binding(
-                    get: { legalCase.status },
+                    get: { incident.status },
                     set: { newVal in
-                        let old = legalCase.status
-                        legalCase.status = newVal
-                        legalCase.modifiedAt = .now
-                        legalCase.addLogEntry("Status changed from \(old.rawValue) to \(newVal.rawValue)", type: .statusChange)
+                        let old = incident.status
+                        incident.status = newVal
+                        incident.modifiedAt = .now
+                        incident.addLogEntry("Status changed from \(old.rawValue) to \(newVal.rawValue)", type: .statusChange)
                     }
                 )) {
-                    ForEach(CaseStatus.allCases) { status in
+                    ForEach(IncidentStatus.allCases) { status in
                         Label(status.rawValue, systemImage: status.icon).tag(status)
                     }
                 }
 
-                Picker("Priority", selection: Binding(
-                    get: { legalCase.priority },
-                    set: { legalCase.priority = $0; legalCase.modifiedAt = .now }
+                Picker("Severity", selection: Binding(
+                    get: { incident.priority },
+                    set: { incident.priority = $0; incident.modifiedAt = .now }
                 )) {
-                    ForEach(CasePriority.allCases) { p in
-                        Label(p.rawValue, systemImage: p.icon).tag(p)
+                    ForEach(Severity.allCases) { s in
+                        Label(s.rawValue, systemImage: s.icon).tag(s)
                     }
                 }
             }
 
             Section("Info") {
-                LabeledContent("Type", value: legalCase.context.rawValue)
-                LabeledContent("Created", value: legalCase.createdAt.shortLegal)
-                LabeledContent("Modified", value: legalCase.modifiedAt.shortLegal)
-                LabeledContent("Reports", value: "\(legalCase.reports.count)")
-                LabeledContent("Files", value: "\(legalCase.files.count)")
+                LabeledContent("Category", value: incident.context.rawValue)
+                LabeledContent("Created", value: incident.createdAt.shortFormatted)
+                LabeledContent("Modified", value: incident.modifiedAt.shortFormatted)
+                LabeledContent("Reports", value: "\(incident.reports.count)")
+                LabeledContent("Files", value: "\(incident.files.count)")
+                if !incident.location.isEmpty {
+                    LabeledContent("Location", value: incident.location)
+                }
             }
 
-            if !legalCase.tags.isEmpty {
+            if !incident.tags.isEmpty {
                 Section("Tags") {
                     FlowLayout(spacing: 4) {
-                        ForEach(legalCase.tags) { tag in
+                        ForEach(incident.tags) { tag in
                             TagPill(tag: tag)
                         }
                     }
                 }
             }
 
-            if !legalCase.sortedDeadlines.isEmpty {
+            if !incident.sortedDeadlines.isEmpty {
                 Section("Deadlines") {
-                    ForEach(legalCase.sortedDeadlines, id: \.persistentModelID) { deadline in
+                    ForEach(incident.sortedDeadlines, id: \.persistentModelID) { deadline in
                         HStack(spacing: 6) {
                             Image(systemName: deadline.urgencyIcon)
                                 .foregroundStyle(deadline.urgencyColor)
@@ -235,7 +238,7 @@ struct CaseInspectorView: View {
                             VStack(alignment: .leading, spacing: 1) {
                                 Text(deadline.title)
                                     .font(.caption)
-                                Text(deadline.dueDate.shortLegal)
+                                Text(deadline.dueDate.shortFormatted)
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                             }
@@ -244,9 +247,9 @@ struct CaseInspectorView: View {
                 }
             }
 
-            if !legalCase.contacts.isEmpty {
+            if !incident.contacts.isEmpty {
                 Section("Contacts") {
-                    ForEach(legalCase.contacts) { contact in
+                    ForEach(incident.contacts) { contact in
                         VStack(alignment: .leading, spacing: 1) {
                             Text(contact.name)
                                 .font(.caption)
@@ -356,28 +359,28 @@ struct FlowLayout: Layout {
 
 struct CommandPaletteOverlay: View {
     @Binding var isPresented: Bool
-    let cases: [LegalCase]
-    let onSelectCase: (LegalCase) -> Void
-    let onSelectReport: (Report, LegalCase) -> Void
+    let incidents: [Incident]
+    let onSelectIncident: (Incident) -> Void
+    let onSelectReport: (Report, Incident) -> Void
 
     @State private var query = ""
     @FocusState private var isFocused: Bool
 
     private var results: [(String, String, () -> Void)] {
         guard !query.isEmpty else {
-            return cases.prefix(8).map { c in
-                (c.displayTitle, c.context.rawValue, { onSelectCase(c); isPresented = false })
+            return incidents.prefix(8).map { incident in
+                (incident.displayTitle, incident.context.rawValue, { onSelectIncident(incident); isPresented = false })
             }
         }
         let q = query.lowercased()
         var items: [(String, String, () -> Void)] = []
-        for c in cases {
-            if c.title.lowercased().contains(q) || c.referenceNumber.lowercased().contains(q) {
-                items.append((c.displayTitle, "Case - \(c.context.rawValue)", { onSelectCase(c); isPresented = false }))
+        for incident in incidents {
+            if incident.title.lowercased().contains(q) || incident.referenceNumber.lowercased().contains(q) {
+                items.append((incident.displayTitle, "Incident - \(incident.context.rawValue)", { onSelectIncident(incident); isPresented = false }))
             }
-            for r in c.reports {
+            for r in incident.reports {
                 if r.title.lowercased().contains(q) {
-                    items.append((r.title.isEmpty ? "Untitled Report" : r.title, "Report in \(c.title)", { onSelectReport(r, c); isPresented = false }))
+                    items.append((r.title.isEmpty ? "Untitled Report" : r.title, "Report in \(incident.title)", { onSelectReport(r, incident); isPresented = false }))
                 }
             }
         }
@@ -394,7 +397,7 @@ struct CommandPaletteOverlay: View {
                 HStack(spacing: 8) {
                     Image(systemName: "magnifyingglass")
                         .foregroundStyle(.secondary)
-                    TextField("Search cases, reports...", text: $query)
+                    TextField("Search incidents, reports...", text: $query)
                         .textFieldStyle(.plain)
                         .font(.system(size: 16))
                         .focused($isFocused)
@@ -409,7 +412,7 @@ struct CommandPaletteOverlay: View {
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
                         if query.isEmpty {
-                            Text("Recent Cases")
+                            Text("Recent Incidents")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                                 .padding(.horizontal, 12)

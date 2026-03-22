@@ -59,9 +59,9 @@ struct PrintColors {
     static let mutedText = NSColor(white: 0.4, alpha: 1.0)
 }
 
-// MARK: - Status & Priority Colors
+// MARK: - Status & Severity Colors
 
-extension CaseStatus {
+extension IncidentStatus {
     var color: Color {
         switch self {
         case .open: return .blue
@@ -73,14 +73,14 @@ extension CaseStatus {
     }
 }
 
-extension CasePriority {
+extension Severity {
     var color: Color {
         switch self {
         case .none: return .secondary
         case .low: return .blue
         case .medium: return .yellow
         case .high: return .orange
-        case .urgent: return .red
+        case .critical: return .red
         }
     }
 }
@@ -113,13 +113,13 @@ extension Tag {
 // MARK: - Date Formatting
 
 extension Date {
-    var legalFormatted: String {
+    var dateFormatted: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d, yyyy"
         return formatter.string(from: self)
     }
 
-    var shortLegal: String {
+    var shortFormatted: String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MM/dd/yyyy"
         return formatter.string(from: self)

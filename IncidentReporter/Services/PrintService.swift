@@ -1,33 +1,33 @@
 import AppKit
 import SwiftUI
 
-// MARK: - Legal Document Renderer
+// MARK: - Document Renderer
 
-class LegalDocumentView: NSView {
+class DocumentView: NSView {
     let report: Report
-    let legalCase: LegalCase?
+    let incident: Incident?
     private var totalPages = 1
 
     // Read settings from UserDefaults at render time
-    private let firmName: String
-    private let firmAddress: String
+    private let orgName: String
+    private let orgAddress: String
     private let headerAlignment: String
-    private let showFirmNameInHeader: Bool
-    private let showFirmAddressInHeader: Bool
+    private let showOrgNameInHeader: Bool
+    private let showOrgAddressInHeader: Bool
     private let headerSeparatorStyle: String
     private let customFooterText: String
     private let customWatermarkText: String
 
-    init(report: Report, legalCase: LegalCase?) {
+    init(report: Report, incident: Incident?) {
         self.report = report
-        self.legalCase = legalCase
+        self.incident = incident
 
         let defaults = UserDefaults.standard
-        self.firmName = defaults.string(forKey: "firmName") ?? ""
-        self.firmAddress = defaults.string(forKey: "firmAddress") ?? ""
+        self.orgName = defaults.string(forKey: "orgName") ?? ""
+        self.orgAddress = defaults.string(forKey: "orgAddress") ?? ""
         self.headerAlignment = defaults.string(forKey: "headerAlignment") ?? "left"
-        self.showFirmNameInHeader = defaults.object(forKey: "showFirmNameInHeader") as? Bool ?? true
-        self.showFirmAddressInHeader = defaults.object(forKey: "showFirmAddressInHeader") as? Bool ?? true
+        self.showOrgNameInHeader = defaults.object(forKey: "showOrgNameInHeader") as? Bool ?? true
+        self.showOrgAddressInHeader = defaults.object(forKey: "showOrgAddressInHeader") as? Bool ?? true
         self.headerSeparatorStyle = defaults.string(forKey: "headerSeparatorStyle") ?? "line"
         self.customFooterText = defaults.string(forKey: "customFooterText") ?? ""
         self.customWatermarkText = defaults.string(forKey: "customWatermarkText") ?? ""
@@ -38,12 +38,12 @@ class LegalDocumentView: NSView {
 
     required init?(coder: NSCoder) { nil }
 
-    private var firmHeaderHeight: CGFloat {
-        let showFirm = showFirmNameInHeader && !firmName.isEmpty
-        let showAddr = showFirmAddressInHeader && !firmAddress.isEmpty
-        if !showFirm && !showAddr { return 0 }
+    private var orgHeaderHeight: CGFloat {
+        let showOrg = showOrgNameInHeader && !orgName.isEmpty
+        let showAddr = showOrgAddressInHeader && !orgAddress.isEmpty
+        if !showOrg && !showAddr { return 0 }
         var h: CGFloat = 8 // bottom padding
-        if showFirm { h += 18 } // firm name line
+        if showOrg { h += 18 } // org name line
         if showAddr { h += 14 } // address line
         if headerSeparatorStyle == "doubleLine" { h += 8 }
         else if headerSeparatorStyle == "line" { h += 6 }
@@ -58,10 +58,10 @@ class LegalDocumentView: NSView {
             options: [.usesLineFragmentOrigin, .usesFontLeading]
         ).height
 
-        let headerHeight: CGFloat = (report.includeHeader && legalCase != nil) ? 120 : 0
+        let headerHeight: CGFloat = (report.includeHeader && incident != nil) ? 120 : 0
         let dateHeight: CGFloat = report.includeDate ? 24 : 0
         let titleHeight: CGFloat = report.title.isEmpty ? 0 : 40
-        let overhead = firmHeaderHeight + headerHeight + dateHeight + titleHeight + 20
+        let overhead = orgHeaderHeight + headerHeight + dateHeight + titleHeight + 20
 
         let available = PageLayout.contentHeight - overhead
         if textHeight <= available {
@@ -162,12 +162,12 @@ class LegalDocumentView: NSView {
         context.restoreGState()
     }
 
-    // MARK: - Firm Header Drawing
+    // MARK: - Organization Header Drawing
 
-    private func drawFirmHeader(at startY: CGFloat, context: CGContext) -> CGFloat {
-        let showFirm = showFirmNameInHeader && !firmName.isEmpty
-        let showAddr = showFirmAddressInHeader && !firmAddress.isEmpty
-        guard showFirm || showAddr else { return startY }
+    private func drawOrgHeader(at startY: CGFloat, context: CGContext) -> CGFloat {
+        let showOrg = showOrgNameInHeader && !orgName.isEmpty
+        let showAddr = showOrgAddressInHeader && !orgAddress.isEmpty
+        guard showOrg || showAddr else { return startY }
 
         var y = startY
         let contentWidth = PageLayout.contentWidth
@@ -184,15 +184,15 @@ class LegalDocumentView: NSView {
             }
         }
 
-        if showFirm {
-            let firmAttrs: [NSAttributedString.Key: Any] = [
+        if showOrg {
+            let orgAttrs: [NSAttributedString.Key: Any] = [
                 .font: AppFonts.bodyBold(size: 13),
                 .foregroundColor: NSColor.black
             ]
-            let firmStr = NSAttributedString(string: firmName, attributes: firmAttrs)
-            let firmSize = firmStr.size()
-            y -= firmSize.height + 2
-            firmStr.draw(at: NSPoint(x: xForText(firmSize.width), y: y))
+            let orgStr = NSAttributedString(string: orgName, attributes: orgAttrs)
+            let orgSize = orgStr.size()
+            y -= orgSize.height + 2
+            orgStr.draw(at: NSPoint(x: xForText(orgSize.width), y: y))
         }
 
         if showAddr {
@@ -200,7 +200,7 @@ class LegalDocumentView: NSView {
                 .font: AppFonts.caption(size: 10),
                 .foregroundColor: NSColor.gray
             ]
-            let addrStr = NSAttributedString(string: firmAddress, attributes: addrAttrs)
+            let addrStr = NSAttributedString(string: orgAddress, attributes: addrAttrs)
             let addrSize = addrStr.size()
             y -= addrSize.height + 2
             addrStr.draw(at: NSPoint(x: xForText(addrSize.width), y: y))
@@ -237,12 +237,12 @@ class LegalDocumentView: NSView {
     private func drawFirstPage(in pageRect: NSRect, context: CGContext) {
         var y = pageRect.maxY - PageLayout.marginTop
 
-        // Firm header
-        y = drawFirmHeader(at: y, context: context)
+        // Organization header
+        y = drawOrgHeader(at: y, context: context)
 
         // Header box
-        if report.includeHeader, let legalCase {
-            y = drawHeaderBox(at: y, legalCase: legalCase, context: context)
+        if report.includeHeader, let incident {
+            y = drawHeaderBox(at: y, incident: incident, context: context)
             y -= 16
         }
 
@@ -275,18 +275,18 @@ class LegalDocumentView: NSView {
             y -= 14
         }
 
-        // Date + Prepared by
-        if report.includeDate || !report.preparedBy.isEmpty {
+        // Date + Reported by
+        if report.includeDate || !report.reportedBy.isEmpty {
             let smallAttrs: [NSAttributedString.Key: Any] = [
                 .font: AppFonts.caption(size: 9),
                 .foregroundColor: NSColor.gray
             ]
             if report.includeDate {
-                NSAttributedString(string: "Date: \(Date.now.legalFormatted)", attributes: smallAttrs)
+                NSAttributedString(string: "Date: \(Date.now.dateFormatted)", attributes: smallAttrs)
                     .draw(at: NSPoint(x: PageLayout.marginLeft, y: y))
             }
-            if !report.preparedBy.isEmpty {
-                let prep = NSAttributedString(string: "Prepared by: \(report.preparedBy)", attributes: smallAttrs)
+            if !report.reportedBy.isEmpty {
+                let prep = NSAttributedString(string: "Reported by: \(report.reportedBy)", attributes: smallAttrs)
                 let w = prep.size().width
                 prep.draw(at: NSPoint(x: PageLayout.pageWidth - PageLayout.marginRight - w, y: y))
             }
@@ -294,18 +294,18 @@ class LegalDocumentView: NSView {
         }
     }
 
-    private func drawHeaderBox(at startY: CGFloat, legalCase: LegalCase, context: CGContext) -> CGFloat {
+    private func drawHeaderBox(at startY: CGFloat, incident: Incident, context: CGContext) -> CGFloat {
         let x = PageLayout.marginLeft
         let w = PageLayout.contentWidth
         var lines: [(String, String)] = []
 
-        if !legalCase.title.isEmpty {
-            lines.append(("", legalCase.title))
+        if !incident.title.isEmpty {
+            lines.append(("", incident.title))
         }
-        if !legalCase.referenceNumber.isEmpty {
-            lines.append(("Ref", legalCase.referenceNumber))
+        if !incident.referenceNumber.isEmpty {
+            lines.append(("Ref", incident.referenceNumber))
         }
-        for field in legalCase.sortedFields where !field.value.isEmpty {
+        for field in incident.sortedFields where !field.value.isEmpty {
             lines.append((field.label, field.value))
         }
 
@@ -357,10 +357,10 @@ class LegalDocumentView: NSView {
 
     private func drawContent(_ content: NSAttributedString) {
         var overhead: CGFloat = 20
-        if report.includeDate || !report.preparedBy.isEmpty { overhead += 28 }
+        if report.includeDate || !report.reportedBy.isEmpty { overhead += 28 }
         if !report.title.isEmpty { overhead += 40 }
-        if report.includeHeader && legalCase != nil { overhead += 120 }
-        overhead += firmHeaderHeight
+        if report.includeHeader && incident != nil { overhead += 120 }
+        overhead += orgHeaderHeight
 
         let textRect = NSRect(
             x: PageLayout.marginLeft,
@@ -684,21 +684,21 @@ class LegalDocumentView: NSView {
 
 @MainActor
 struct PrintService {
-    static func print(report: Report, legalCase: LegalCase?) {
-        let docView = LegalDocumentView(report: report, legalCase: legalCase)
+    static func print(report: Report, incident: Incident?) {
+        let docView = DocumentView(report: report, incident: incident)
         let printOp = NSPrintOperation(view: docView, printInfo: PageLayout.printInfo)
         printOp.showsPrintPanel = true
         printOp.showsProgressPanel = true
         printOp.run()
     }
 
-    static func exportPDF(report: Report, legalCase: LegalCase?) {
+    static func exportPDF(report: Report, incident: Incident?) {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.pdf]
         panel.nameFieldStringValue = "\(report.title.isEmpty ? "Report" : report.title).pdf"
         guard panel.runModal() == .OK, let url = panel.url else { return }
 
-        let docView = LegalDocumentView(report: report, legalCase: legalCase)
+        let docView = DocumentView(report: report, incident: incident)
         let pdfData = docView.dataWithPDF(inside: docView.bounds)
 
         do {

@@ -11,13 +11,13 @@ final class PreviewPanelManager: ObservableObject {
 
     var isOpen: Bool { panel != nil }
 
-    func open(report: Report, legalCase: LegalCase?) {
+    func open(report: Report, incident: Incident?) {
         if let existing = panel {
             existing.makeKeyAndOrderFront(nil)
             return
         }
 
-        let previewView = ReportPreviewView(report: report, legalCase: legalCase)
+        let previewView = ReportPreviewView(report: report, incident: incident)
         let hostingView = NSHostingView(rootView: previewView)
 
         let newPanel = NSPanel(
@@ -61,17 +61,17 @@ final class PreviewPanelManager: ObservableObject {
         objectWillChange.send()
     }
 
-    func toggle(report: Report, legalCase: LegalCase?) {
+    func toggle(report: Report, incident: Incident?) {
         if isOpen {
             close()
         } else {
-            open(report: report, legalCase: legalCase)
+            open(report: report, incident: incident)
         }
     }
 
-    func updateContent(report: Report, legalCase: LegalCase?) {
+    func updateContent(report: Report, incident: Incident?) {
         guard let panel else { return }
-        let previewView = ReportPreviewView(report: report, legalCase: legalCase)
+        let previewView = ReportPreviewView(report: report, incident: incident)
         let hostingView = NSHostingView(rootView: previewView)
         panel.contentView = hostingView
         panel.title = report.title.isEmpty ? "Report Preview" : "Preview \u{2014} \(report.title)"
@@ -81,7 +81,7 @@ final class PreviewPanelManager: ObservableObject {
 struct ReportEditorView: View {
     @Environment(\.modelContext) private var modelContext
     @Bindable var report: Report
-    let legalCase: LegalCase?
+    let incident: Incident?
 
     @StateObject private var previewPanel = PreviewPanelManager()
     @State private var showingBatesSettings = false
@@ -97,7 +97,7 @@ struct ReportEditorView: View {
         }
         .onChange(of: report.modifiedAt) {
             if previewPanel.isOpen {
-                previewPanel.updateContent(report: report, legalCase: legalCase)
+                previewPanel.updateContent(report: report, incident: incident)
             }
         }
         .onDisappear {
@@ -106,7 +106,7 @@ struct ReportEditorView: View {
         .toolbar {
             ToolbarItemGroup(placement: .automatic) {
                 Button {
-                    previewPanel.toggle(report: report, legalCase: legalCase)
+                    previewPanel.toggle(report: report, incident: incident)
                 } label: {
                     Label("Preview", systemImage: previewPanel.isOpen ? "eye.fill" : "eye")
                 }
@@ -186,7 +186,7 @@ struct ReportEditorView: View {
                 Label("Bates: \(report.batesNumber(for: 1))", systemImage: "number")
                     .foregroundStyle(.blue)
             }
-            Text("Created \(report.createdAt.shortLegal)")
+            Text("Created \(report.createdAt.shortFormatted)")
         }
         .font(.caption2)
         .foregroundStyle(.secondary)
@@ -264,15 +264,15 @@ struct ReportEditorView: View {
                     .background(.blue.opacity(0.1))
                     .clipShape(Capsule())
 
-                if let legalCase {
-                    Text(legalCase.displayTitle)
+                if let incident {
+                    Text(incident.displayTitle)
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
                 Spacer()
 
-                Text("Modified \(report.modifiedAt.shortLegal)")
+                Text("Modified \(report.modifiedAt.shortFormatted)")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
@@ -309,8 +309,8 @@ struct ReportEditorView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     TextField("Name", text: Binding(
-                        get: { report.preparedBy },
-                        set: { report.preparedBy = $0; report.modifiedAt = .now }
+                        get: { report.reportedBy },
+                        set: { report.reportedBy = $0; report.modifiedAt = .now }
                     ))
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 140)
@@ -961,7 +961,7 @@ struct TemplateLoadSheet: View {
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                     Spacer()
-                                    Text(template.createdAt.shortLegal)
+                                    Text(template.createdAt.shortFormatted)
                                         .font(.caption2)
                                         .foregroundStyle(.tertiary)
                                 }

@@ -5,7 +5,7 @@ import Sparkle
 struct SettingsView: View {
     @ObservedObject var updaterViewModel: UpdaterViewModel
 
-    @AppStorage("defaultPreparedBy") private var defaultPreparedBy = ""
+    @AppStorage("defaultReportedBy") private var defaultReportedBy = ""
     @AppStorage("defaultIncludeHeader") private var defaultIncludeHeader = true
     @AppStorage("defaultIncludePageNumbers") private var defaultIncludePageNumbers = true
     @AppStorage("defaultIncludeDate") private var defaultIncludeDate = true
@@ -33,7 +33,7 @@ struct SettingsView: View {
             updatesSettings
                 .tabItem { Label("Updates", systemImage: "arrow.triangle.2.circlepath") }
         }
-        .frame(width: 540, height: 480)
+        .frame(width: 500, height: 440)
     }
 
     // MARK: - Updates Tab
@@ -84,7 +84,7 @@ struct SettingsView: View {
     private var generalSettings: some View {
         Form {
             Section("Defaults") {
-                TextField("Default 'Prepared By' Name", text: $defaultPreparedBy)
+                TextField("Default 'Reported By' Name", text: $defaultReportedBy)
                 Toggle("Include header info by default", isOn: $defaultIncludeHeader)
                 Toggle("Include page numbers by default", isOn: $defaultIncludePageNumbers)
                 Toggle("Include date by default", isOn: $defaultIncludeDate)
@@ -228,9 +228,9 @@ struct ReportDefaultsSettingsTab: View {
 
     private func buildSampleTitle() -> String {
         var title = defaultTitleFormat
-        title = title.replacingOccurrences(of: "{type}", with: "Legal")
-        title = title.replacingOccurrences(of: "{date}", with: Date.now.shortLegal)
-        title = title.replacingOccurrences(of: "{case}", with: "Sample Case")
+        title = title.replacingOccurrences(of: "{type}", with: "Safety")
+        title = title.replacingOccurrences(of: "{date}", with: Date.now.shortFormatted)
+        title = title.replacingOccurrences(of: "{case}", with: "Sample Incident")
         if autoNumberReports {
             title += " Report #\(autoNumberCounter + 1)"
         }
@@ -241,26 +241,26 @@ struct ReportDefaultsSettingsTab: View {
 // MARK: - Header & Layout Settings Tab
 
 struct HeaderLayoutSettingsTab: View {
-    @AppStorage("firmName") private var firmName = ""
-    @AppStorage("firmAddress") private var firmAddress = ""
+    @AppStorage("orgName") private var orgName = ""
+    @AppStorage("orgAddress") private var orgAddress = ""
     @AppStorage("headerAlignment") private var headerAlignment = "left"
-    @AppStorage("showFirmNameInHeader") private var showFirmNameInHeader = true
-    @AppStorage("showFirmAddressInHeader") private var showFirmAddressInHeader = true
+    @AppStorage("showOrgNameInHeader") private var showOrgNameInHeader = true
+    @AppStorage("showOrgAddressInHeader") private var showOrgAddressInHeader = true
     @AppStorage("headerSeparatorStyle") private var headerSeparatorStyle = "line"
     @AppStorage("customFooterText") private var customFooterText = ""
     @AppStorage("customWatermarkText") private var customWatermarkText = ""
 
     var body: some View {
         Form {
-            Section("Firm Information") {
-                TextField("Company / Firm name", text: $firmName)
-                TextField("Address", text: $firmAddress)
+            Section("Organization Information") {
+                TextField("Company / Organization name", text: $orgName)
+                TextField("Address", text: $orgAddress)
                     .lineLimit(1...3)
             }
 
             Section("Header Display") {
-                Toggle("Show firm name in header", isOn: $showFirmNameInHeader)
-                Toggle("Show firm address in header", isOn: $showFirmAddressInHeader)
+                Toggle("Show organization name in header", isOn: $showOrgNameInHeader)
+                Toggle("Show organization address in header", isOn: $showOrgAddressInHeader)
 
                 Picker("Header alignment", selection: $headerAlignment) {
                     Text("Left").tag("left")
@@ -298,17 +298,17 @@ struct HeaderLayoutSettingsTab: View {
 // MARK: - Naming Settings Tab
 
 struct NamingSettingsTab: View {
-    @AppStorage("caseNumberPrefix") private var caseNumberPrefix = ""
+    @AppStorage("incidentNumberPrefix") private var incidentNumberPrefix = ""
     @AppStorage("autoGenerateReferenceNumbers") private var autoGenerateReferenceNumbers = false
     @AppStorage("referenceNumberFormat") private var referenceNumberFormat = "sequential"
     @AppStorage("referenceNumberSequentialCounter") private var referenceNumberSequentialCounter = 0
-    @AppStorage("defaultCaseType") private var defaultCaseType = "General"
+    @AppStorage("defaultIncidentCategory") private var defaultIncidentCategory = "General"
 
     var body: some View {
         Form {
-            Section("Case Number Prefix") {
-                TextField("Prefix", text: $caseNumberPrefix)
-                Text("e.g. CASE-, REF-, LR-")
+            Section("Incident Number Prefix") {
+                TextField("Prefix", text: $incidentNumberPrefix)
+                Text("e.g. INC-, REF-, IR-")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -341,9 +341,9 @@ struct NamingSettingsTab: View {
                 }
             }
 
-            Section("Default Case Type") {
-                Picker("Default type for new cases", selection: $defaultCaseType) {
-                    ForEach(ReportContext.allCases) { ctx in
+            Section("Default Incident Category") {
+                Picker("Default category for new incidents", selection: $defaultIncidentCategory) {
+                    ForEach(IncidentCategory.allCases) { ctx in
                         Text(ctx.rawValue).tag(ctx.rawValue)
                     }
                 }
@@ -355,7 +355,7 @@ struct NamingSettingsTab: View {
 
     private func previewReferenceNumber() -> String {
         let nextNum = referenceNumberSequentialCounter + 1
-        let prefix = caseNumberPrefix
+        let prefix = incidentNumberPrefix
 
         switch referenceNumberFormat {
         case "sequential":
@@ -467,9 +467,9 @@ struct TagsSettingsView: View {
 
             Spacer()
 
-            // Case count
-            let count = tag.cases.count
-            Text("\(count) \(count == 1 ? "case" : "cases")")
+            // Incident count
+            let count = tag.incidents.count
+            Text("\(count) \(count == 1 ? "incident" : "incidents")")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(width: 60, alignment: .trailing)

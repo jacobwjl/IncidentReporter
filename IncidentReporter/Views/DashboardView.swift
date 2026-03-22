@@ -2,19 +2,19 @@ import SwiftUI
 import SwiftData
 
 struct DashboardView: View {
-    @Query private var cases: [LegalCase]
+    @Query private var incidents: [Incident]
     @Query private var reports: [Report]
     @Query private var attachments: [FileAttachment]
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
+            VStack(alignment: .leading, spacing: 20) {
                 // Header
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Dashboard")
                             .font(.system(size: 24, weight: .bold))
-                        Text(Date.now.legalFormatted)
+                        Text(Date.now.dateFormatted)
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -28,7 +28,7 @@ struct DashboardView: View {
                     GridItem(.flexible()),
                     GridItem(.flexible()),
                 ], spacing: 12) {
-                    StatCard(value: "\(cases.count)", label: "Cases", icon: "folder.fill", color: .blue)
+                    StatCard(value: "\(incidents.count)", label: "Incidents", icon: "exclamationmark.triangle.fill", color: .red)
                     StatCard(value: "\(reports.count)", label: "Reports", icon: "doc.text.fill", color: .green)
                     StatCard(value: "\(totalWords)", label: "Words Written", icon: "text.word.spacing", color: .orange)
                     StatCard(value: "\(attachments.count)", label: "Files Attached", icon: "paperclip", color: .purple)
@@ -40,12 +40,12 @@ struct DashboardView: View {
                         Text("Status Distribution")
                             .font(.system(size: 14, weight: .semibold))
 
-                        let maxStatusCount = CaseStatus.allCases.map { s in
-                            cases.filter { $0.status == s }.count
+                        let maxStatusCount = IncidentStatus.allCases.map { s in
+                            incidents.filter { $0.status == s }.count
                         }.max() ?? 1
 
-                        ForEach(CaseStatus.allCases) { status in
-                            let count = cases.filter { $0.status == status }.count
+                        ForEach(IncidentStatus.allCases) { status in
+                            let count = incidents.filter { $0.status == status }.count
                             HStack(spacing: 8) {
                                 Circle()
                                     .fill(status.color)
@@ -86,7 +86,7 @@ struct DashboardView: View {
 
                             ForEach(Array(upcomingDeadlines.enumerated()), id: \.offset) { index, item in
                                 let deadline = item.0
-                                let caseName = item.1
+                                let incidentName = item.1
                                 HStack(spacing: 8) {
                                     Image(systemName: deadline.urgencyIcon)
                                         .font(.caption)
@@ -97,7 +97,7 @@ struct DashboardView: View {
                                         Text(deadline.title.isEmpty ? "Untitled Deadline" : deadline.title)
                                             .font(.body)
                                             .foregroundStyle(deadline.isOverdue ? .red : .primary)
-                                        Text(caseName)
+                                        Text(incidentName)
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
@@ -105,7 +105,7 @@ struct DashboardView: View {
                                     Spacer()
 
                                     VStack(alignment: .trailing, spacing: 1) {
-                                        Text(deadline.dueDate.shortLegal)
+                                        Text(deadline.dueDate.shortFormatted)
                                             .font(.system(size: 12, design: .monospaced))
                                             .foregroundStyle(deadline.isOverdue ? .red : .secondary)
                                         if deadline.isOverdue {
@@ -145,7 +145,7 @@ struct DashboardView: View {
 
                             ForEach(Array(recentActivityEntries.enumerated()), id: \.offset) { index, item in
                                 let entry = item.0
-                                let caseName = item.1
+                                let incidentName = item.1
                                 HStack(spacing: 8) {
                                     Image(systemName: entry.entryType.icon)
                                         .font(.caption)
@@ -157,7 +157,7 @@ struct DashboardView: View {
                                             .font(.body)
                                             .lineLimit(2)
                                         HStack(spacing: 6) {
-                                            Text(caseName)
+                                            Text(incidentName)
                                                 .font(.caption)
                                                 .foregroundStyle(.secondary)
                                             Text("\u{2022}")
@@ -202,7 +202,7 @@ struct DashboardView: View {
                                     let maxCount = contextBreakdown.map(\.1).max() ?? 1
                                     let pct = CGFloat(count) / CGFloat(maxCount)
                                     RoundedRectangle(cornerRadius: 3)
-                                        .fill(.blue.opacity(0.2))
+                                        .fill(.red.opacity(0.2))
                                         .frame(width: geo.size.width * pct)
                                 }
                                 .frame(width: 100, height: 14)
@@ -232,7 +232,7 @@ struct DashboardView: View {
                                         .foregroundStyle(.secondary)
                                 }
                                 Spacer()
-                                Text(report.modifiedAt.shortLegal)
+                                Text(report.modifiedAt.shortFormatted)
                                     .font(.caption)
                                     .foregroundStyle(.tertiary)
                             }
@@ -254,7 +254,7 @@ struct DashboardView: View {
                     ], spacing: 10) {
                         FunFactCard(icon: "book.pages", title: "Pages (est.)", value: "\(estimatedPages)")
                         FunFactCard(icon: "clock", title: "Avg Words/Report", value: reports.isEmpty ? "\u{2014}" : "\(totalWords / max(reports.count, 1))")
-                        FunFactCard(icon: "calendar", title: "First Case", value: oldestCaseDate)
+                        FunFactCard(icon: "calendar", title: "First Incident", value: oldestIncidentDate)
                         FunFactCard(icon: "flame", title: "Most Sections", value: "\(maxSections) sections")
                         FunFactCard(icon: "arrow.up.right", title: "Longest Report", value: "\(longestReportWords) words")
                         FunFactCard(icon: "photo.stack", title: "Total File Size", value: totalFileSize)
@@ -264,8 +264,8 @@ struct DashboardView: View {
                 .background(Color(nsColor: .controlBackgroundColor))
                 .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            .padding(24)
-            .frame(maxWidth: 860)
+            .padding(20)
+            .frame(maxWidth: 760)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -282,8 +282,8 @@ struct DashboardView: View {
 
     private var contextBreakdown: [(String, Int)] {
         var counts: [String: Int] = [:]
-        for c in cases {
-            counts[c.context.rawValue, default: 0] += 1
+        for incident in incidents {
+            counts[incident.context.rawValue, default: 0] += 1
         }
         return counts.sorted { $0.value > $1.value }
     }
@@ -296,9 +296,9 @@ struct DashboardView: View {
         reports.map { $0.wordCount }.max() ?? 0
     }
 
-    private var oldestCaseDate: String {
-        guard let oldest = cases.min(by: { $0.createdAt < $1.createdAt }) else { return "\u{2014}" }
-        return oldest.createdAt.shortLegal
+    private var oldestIncidentDate: String {
+        guard let oldest = incidents.min(by: { $0.createdAt < $1.createdAt }) else { return "\u{2014}" }
+        return oldest.createdAt.shortFormatted
     }
 
     private var totalFileSize: String {
@@ -315,9 +315,9 @@ struct DashboardView: View {
 
     private var upcomingDeadlines: [(Deadline, String)] {
         var all: [(Deadline, String)] = []
-        for c in cases {
-            for d in c.deadlines where !d.isCompleted {
-                all.append((d, c.title.isEmpty ? "Untitled" : c.title))
+        for incident in incidents {
+            for d in incident.deadlines where !d.isCompleted {
+                all.append((d, incident.title.isEmpty ? "Untitled" : incident.title))
             }
         }
         // Overdue first (sorted by date ascending), then upcoming by date ascending
@@ -328,9 +328,9 @@ struct DashboardView: View {
 
     private var recentActivityEntries: [(ActivityLogEntry, String)] {
         var all: [(ActivityLogEntry, String)] = []
-        for c in cases {
-            for entry in c.activityLog {
-                all.append((entry, c.title.isEmpty ? "Untitled" : c.title))
+        for incident in incidents {
+            for entry in incident.activityLog {
+                all.append((entry, incident.title.isEmpty ? "Untitled" : incident.title))
             }
         }
         return Array(all.sorted { $0.0.timestamp > $1.0.timestamp }.prefix(10))

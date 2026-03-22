@@ -3,7 +3,7 @@ set -e
 
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_DIR="$PROJECT_DIR/build"
-APP_NAME="LegalReporter"
+APP_NAME="IncidentReporter"
 
 echo "==> Building $APP_NAME (Release)..."
 cd "$PROJECT_DIR"
@@ -51,7 +51,7 @@ rm -rf "$STAGING"
 echo ""
 echo "✅ DMG created: $DMG_PATH"
 echo ""
-echo "To install: Open the DMG, drag LegalReporter to Applications."
+echo "To install: Open the DMG, drag IncidentReporter to Applications."
 echo "To update:  Replace the old .app in /Applications with the new one."
-echo "            Your data is stored separately in ~/Library/Application Support/LegalReporter/"
+echo "            Your data is stored separately in ~/Library/Application Support/IncidentReporter/"
 echo "            so it survives app updates."

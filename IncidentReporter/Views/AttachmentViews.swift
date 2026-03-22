@@ -125,7 +125,7 @@ struct AttachmentManagerView: View {
            let bitmap = NSBitmapImageRep(data: tiffData),
            let pngData = bitmap.representation(using: .png, properties: [:]) {
             let attachment = FileAttachment(
-                filename: "Pasted Image \(Date.now.shortLegal).png",
+                filename: "Pasted Image \(Date.now.shortFormatted).png",
                 fileType: .image,
                 fileData: pngData
             )
@@ -388,11 +388,11 @@ struct FilePickerSheet: View {
     }
 }
 
-// MARK: - Case Files View (case-level attachment management)
+// MARK: - Incident Files View (incident-level attachment management)
 
-struct CaseFilesView: View {
+struct IncidentFilesView: View {
     @Environment(\.modelContext) private var modelContext
-    let legalCase: LegalCase
+    let incident: Incident
 
     @State private var showingFilePicker = false
     @State private var showingICloudBrowser = false
@@ -400,10 +400,10 @@ struct CaseFilesView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Case Files")
+                Text("Incident Files")
                     .font(AppFonts.swiftUIHeading)
                 Spacer()
-                Text("\(legalCase.files.count) files")
+                Text("\(incident.files.count) files")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -416,12 +416,12 @@ struct CaseFilesView: View {
                 .menuStyle(.borderlessButton)
             }
 
-            if legalCase.files.isEmpty {
+            if incident.files.isEmpty {
                 VStack(spacing: 8) {
                     Image(systemName: "folder.badge.plus")
                         .font(.title2)
                         .foregroundStyle(.secondary)
-                    Text("No files attached to this case")
+                    Text("No files attached to this incident")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text("Add photos, PDFs, documents, or any other files from your computer or iCloud Drive")
@@ -435,11 +435,11 @@ struct CaseFilesView: View {
                 LazyVGrid(columns: [
                     GridItem(.adaptive(minimum: 120, maximum: 160))
                 ], spacing: 12) {
-                    ForEach(legalCase.files.sorted(by: { $0.addedAt > $1.addedAt })) { file in
-                        CaseFileCard(attachment: file) {
-                            legalCase.files.removeAll { $0.id == file.id }
+                    ForEach(incident.files.sorted(by: { $0.addedAt > $1.addedAt })) { file in
+                        IncidentFileCard(attachment: file) {
+                            incident.files.removeAll { $0.id == file.id }
                             modelContext.delete(file)
-                            legalCase.modifiedAt = .now
+                            incident.modifiedAt = .now
                         }
                     }
                 }
@@ -468,9 +468,9 @@ struct CaseFilesView: View {
             attachment.thumbnailData = generateThumbnail(from: image)
         }
 
-        attachment.legalCase = legalCase
-        legalCase.files.append(attachment)
-        legalCase.modifiedAt = .now
+        attachment.incident = incident
+        incident.files.append(attachment)
+        incident.modifiedAt = .now
     }
 
     private func generateThumbnail(from image: NSImage, maxSize: CGFloat = 200) -> Data? {
@@ -485,7 +485,7 @@ struct CaseFilesView: View {
     }
 }
 
-struct CaseFileCard: View {
+struct IncidentFileCard: View {
     let attachment: FileAttachment
     let onRemove: () -> Void
 

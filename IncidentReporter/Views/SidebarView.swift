@@ -3,22 +3,22 @@ import SwiftData
 
 struct SidebarView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \LegalCase.modifiedAt, order: .reverse) private var cases: [LegalCase]
+    @Query(sort: \Incident.modifiedAt, order: .reverse) private var incidents: [Incident]
     @Query private var allTags: [Tag]
 
-    @Binding var selectedCase: LegalCase?
+    @Binding var selectedIncident: Incident?
     @Binding var selectedReport: Report?
-    @Binding var showingNewCase: Bool
+    @Binding var showingNewIncident: Bool
 
     @State private var showingDeleteConfirmation = false
-    @State private var caseToDelete: LegalCase?
+    @State private var incidentToDelete: Incident?
     @State private var searchText = ""
-    @State private var statusFilter: CaseStatus?
+    @State private var statusFilter: IncidentStatus?
     @State private var tagFilter: Tag?
     @State private var showFilters = false
 
-    private var filteredCases: [LegalCase] {
-        var result = cases
+    private var filteredIncidents: [Incident] {
+        var result = incidents
         if let statusFilter {
             result = result.filter { $0.status == statusFilter }
         }
@@ -36,19 +36,19 @@ struct SidebarView: View {
         return result
     }
 
-    private var starredCases: [LegalCase] { filteredCases.filter { $0.isStarred } }
-    private var activeCases: [LegalCase] {
-        filteredCases.filter { !$0.isStarred && $0.status != .archived && $0.status != .closed }
+    private var starredIncidents: [Incident] { filteredIncidents.filter { $0.isStarred } }
+    private var activeIncidents: [Incident] {
+        filteredIncidents.filter { !$0.isStarred && $0.status != .archived && $0.status != .closed }
     }
-    private var closedCases: [LegalCase] {
-        filteredCases.filter { !$0.isStarred && ($0.status == .archived || $0.status == .closed) }
+    private var closedIncidents: [Incident] {
+        filteredIncidents.filter { !$0.isStarred && ($0.status == .archived || $0.status == .closed) }
     }
 
     var body: some View {
         List {
             // Dashboard button
             Button {
-                selectedCase = nil
+                selectedIncident = nil
                 selectedReport = nil
             } label: {
                 Label("Dashboard", systemImage: "square.grid.2x2")
@@ -61,7 +61,7 @@ struct SidebarView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
                     .font(.caption)
-                TextField("Search cases...", text: $searchText)
+                TextField("Search incidents...", text: $searchText)
                     .textFieldStyle(.plain)
                     .font(.caption)
                 if !searchText.isEmpty {
@@ -82,7 +82,7 @@ struct SidebarView: View {
                 VStack(alignment: .leading, spacing: 6) {
                     // Status filter
                     HStack(spacing: 4) {
-                        ForEach(CaseStatus.allCases) { status in
+                        ForEach(IncidentStatus.allCases) { status in
                             Button {
                                 statusFilter = statusFilter == status ? nil : status
                             } label: {
@@ -134,13 +134,12 @@ struct SidebarView: View {
                     statusFilter = nil
                     tagFilter = nil
                     searchText = ""
-                    // Show all - reset filters
                 } label: {
                     Label {
                         HStack {
-                            Text("All Cases")
+                            Text("All Incidents")
                             Spacer()
-                            Text("\(cases.count)")
+                            Text("\(incidents.count)")
                                 .font(.caption2)
                                 .foregroundStyle(.tertiary)
                         }
@@ -150,7 +149,7 @@ struct SidebarView: View {
                 }
                 .buttonStyle(.plain)
 
-                let overdueCount = cases.flatMap(\.overdueDeadlines).count
+                let overdueCount = incidents.flatMap(\.overdueDeadlines).count
                 if overdueCount > 0 {
                     Button {
                         // Could implement a special filter here
@@ -175,7 +174,7 @@ struct SidebarView: View {
                     .buttonStyle(.plain)
                 }
 
-                let reviewCount = cases.filter { $0.status == .underReview }.count
+                let reviewCount = incidents.filter { $0.status == .underReview }.count
                 if reviewCount > 0 {
                     Button {
                         statusFilter = .underReview
@@ -198,26 +197,26 @@ struct SidebarView: View {
             }
 
             // Starred
-            if !starredCases.isEmpty {
+            if !starredIncidents.isEmpty {
                 Section("Starred") {
-                    ForEach(starredCases) { legalCase in
-                        caseRow(legalCase)
+                    ForEach(starredIncidents) { incident in
+                        incidentRow(incident)
                     }
                 }
             }
 
-            // Active Cases
-            Section("Cases") {
-                ForEach(activeCases) { legalCase in
-                    caseRow(legalCase)
+            // Active Incidents
+            Section("Incidents") {
+                ForEach(activeIncidents) { incident in
+                    incidentRow(incident)
                 }
             }
 
             // Closed/Archived
-            if !closedCases.isEmpty {
+            if !closedIncidents.isEmpty {
                 Section("Closed") {
-                    ForEach(closedCases) { legalCase in
-                        caseRow(legalCase)
+                    ForEach(closedIncidents) { incident in
+                        incidentRow(incident)
                     }
                 }
             }
@@ -226,9 +225,9 @@ struct SidebarView: View {
         .safeAreaInset(edge: .bottom) {
             HStack {
                 Button {
-                    showingNewCase = true
+                    showingNewIncident = true
                 } label: {
-                    Label("New Case", systemImage: "plus.circle")
+                    Label("New Incident", systemImage: "plus.circle")
                 }
                 .buttonStyle(.plain)
                 .padding()
@@ -246,30 +245,30 @@ struct SidebarView: View {
                 .help("Toggle Filters")
             }
         }
-        .alert("Delete Case?", isPresented: $showingDeleteConfirmation) {
+        .alert("Delete Incident?", isPresented: $showingDeleteConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
-                if let caseToDelete {
-                    if selectedCase == caseToDelete {
-                        selectedCase = nil
+                if let incidentToDelete {
+                    if selectedIncident == incidentToDelete {
+                        selectedIncident = nil
                         selectedReport = nil
                     }
-                    modelContext.delete(caseToDelete)
+                    modelContext.delete(incidentToDelete)
                 }
             }
         } message: {
-            Text("This will permanently delete the case and all its reports.")
+            Text("This will permanently delete the incident and all its reports.")
         }
     }
 
-    // MARK: - Case Row
+    // MARK: - Incident Row
 
     @ViewBuilder
-    private func caseRow(_ legalCase: LegalCase) -> some View {
+    private func incidentRow(_ incident: Incident) -> some View {
         DisclosureGroup {
-            ForEach(legalCase.reports.sorted(by: { $0.modifiedAt > $1.modifiedAt })) { report in
+            ForEach(incident.reports.sorted(by: { $0.modifiedAt > $1.modifiedAt })) { report in
                 Button {
-                    selectedCase = legalCase
+                    selectedIncident = incident
                     selectedReport = report
                 } label: {
                     Label {
@@ -288,15 +287,15 @@ struct SidebarView: View {
                 .buttonStyle(.plain)
                 .padding(.vertical, 2)
                 .contextMenu {
-                    Button("Duplicate") { duplicateReport(report, in: legalCase) }
+                    Button("Duplicate") { duplicateReport(report, in: incident) }
                     Divider()
-                    Button("Delete", role: .destructive) { deleteReport(report, from: legalCase) }
+                    Button("Delete", role: .destructive) { deleteReport(report, from: incident) }
                 }
             }
 
             Button {
-                selectedCase = legalCase
-                addReport(to: legalCase)
+                selectedIncident = incident
+                addReport(to: incident)
             } label: {
                 Label("New Report", systemImage: "plus")
                     .foregroundStyle(.secondary)
@@ -304,68 +303,81 @@ struct SidebarView: View {
             .buttonStyle(.plain)
         } label: {
             Button {
-                selectedCase = legalCase
+                selectedIncident = incident
                 selectedReport = nil
             } label: {
                 HStack(spacing: 6) {
                     // Status dot
                     Circle()
-                        .fill(legalCase.status.color)
+                        .fill(incident.status.color)
                         .frame(width: 8, height: 8)
 
                     VStack(alignment: .leading, spacing: 2) {
                         HStack(spacing: 4) {
-                            Text(legalCase.title.isEmpty ? "Untitled" : legalCase.title)
+                            Text(incident.title.isEmpty ? "Untitled" : incident.title)
                                 .font(.body)
                                 .fontWeight(.medium)
                                 .lineLimit(1)
 
-                            if legalCase.isStarred {
+                            if incident.isStarred {
                                 Image(systemName: "star.fill")
                                     .font(.caption2)
                                     .foregroundStyle(.yellow)
                             }
 
-                            if legalCase.priority == .high || legalCase.priority == .urgent {
-                                Image(systemName: legalCase.priority.icon)
+                            if incident.priority == .high || incident.priority == .critical {
+                                Image(systemName: incident.priority.icon)
                                     .font(.caption2)
-                                    .foregroundStyle(legalCase.priority.color)
+                                    .foregroundStyle(incident.priority.color)
                             }
                         }
 
                         HStack(spacing: 6) {
-                            Text(legalCase.context.rawValue)
+                            Text(incident.context.rawValue)
                                 .font(.caption2)
                                 .padding(.horizontal, 5)
                                 .padding(.vertical, 1)
                                 .background(.blue.opacity(0.1))
                                 .clipShape(Capsule())
 
-                            if !legalCase.referenceNumber.isEmpty {
-                                Text(legalCase.referenceNumber)
+                            if !incident.referenceNumber.isEmpty {
+                                Text(incident.referenceNumber)
                                     .font(.caption2)
                                     .foregroundStyle(.secondary)
                             }
 
-                            if let deadline = legalCase.nextDeadline {
+                            if let deadline = incident.nextDeadline {
                                 HStack(spacing: 2) {
                                     Image(systemName: deadline.urgencyIcon)
                                         .font(.system(size: 8))
-                                    Text(deadline.dueDate.shortLegal)
+                                    Text(deadline.dueDate.shortFormatted)
                                         .font(.system(size: 9))
                                 }
                                 .foregroundStyle(deadline.urgencyColor)
                             }
                         }
 
-                        // Tags row
-                        if !legalCase.tags.isEmpty {
+                        // Location subtitle
+                        if !incident.location.isEmpty {
                             HStack(spacing: 3) {
-                                ForEach(legalCase.tags.prefix(3)) { tag in
+                                Image(systemName: "mappin")
+                                    .font(.system(size: 8))
+                                    .foregroundStyle(.secondary)
+                                Text(incident.location)
+                                    .font(.caption2)
+                                    .foregroundStyle(.secondary)
+                                    .lineLimit(1)
+                            }
+                        }
+
+                        // Tags row
+                        if !incident.tags.isEmpty {
+                            HStack(spacing: 3) {
+                                ForEach(incident.tags.prefix(3)) { tag in
                                     TagPill(tag: tag, size: .small)
                                 }
-                                if legalCase.tags.count > 3 {
-                                    Text("+\(legalCase.tags.count - 3)")
+                                if incident.tags.count > 3 {
+                                    Text("+\(incident.tags.count - 3)")
                                         .font(.system(size: 8))
                                         .foregroundStyle(.tertiary)
                                 }
@@ -376,41 +388,41 @@ struct SidebarView: View {
             }
             .buttonStyle(.plain)
             .contextMenu {
-                Button("New Report") { addReport(to: legalCase) }
+                Button("New Report") { addReport(to: incident) }
                 Divider()
 
-                Button(legalCase.isStarred ? "Unstar" : "Star") {
-                    legalCase.isStarred.toggle()
-                    legalCase.modifiedAt = .now
+                Button(incident.isStarred ? "Unstar" : "Star") {
+                    incident.isStarred.toggle()
+                    incident.modifiedAt = .now
                 }
 
                 Menu("Status") {
-                    ForEach(CaseStatus.allCases) { status in
+                    ForEach(IncidentStatus.allCases) { status in
                         Button {
-                            let old = legalCase.status
-                            legalCase.status = status
-                            legalCase.modifiedAt = .now
-                            legalCase.addLogEntry("Status: \(old.rawValue) \u{2192} \(status.rawValue)", type: .statusChange)
+                            let old = incident.status
+                            incident.status = status
+                            incident.modifiedAt = .now
+                            incident.addLogEntry("Status: \(old.rawValue) \u{2192} \(status.rawValue)", type: .statusChange)
                         } label: {
                             Label(status.rawValue, systemImage: status.icon)
                         }
                     }
                 }
 
-                Menu("Priority") {
-                    ForEach(CasePriority.allCases) { p in
+                Menu("Severity") {
+                    ForEach(Severity.allCases) { s in
                         Button {
-                            legalCase.priority = p
-                            legalCase.modifiedAt = .now
+                            incident.priority = s
+                            incident.modifiedAt = .now
                         } label: {
-                            Label(p.rawValue, systemImage: p.icon)
+                            Label(s.rawValue, systemImage: s.icon)
                         }
                     }
                 }
 
                 Divider()
-                Button("Delete Case", role: .destructive) {
-                    caseToDelete = legalCase
+                Button("Delete Incident", role: .destructive) {
+                    incidentToDelete = incident
                     showingDeleteConfirmation = true
                 }
             }
@@ -419,16 +431,16 @@ struct SidebarView: View {
 
     // MARK: - Actions
 
-    private func addReport(to legalCase: LegalCase) {
-        let report = Report(title: "", context: legalCase.context)
-        report.legalCase = legalCase
-        legalCase.reports.append(report)
-        legalCase.modifiedAt = .now
+    private func addReport(to incident: Incident) {
+        let report = Report(title: "", context: incident.context)
+        report.incident = incident
+        incident.reports.append(report)
+        incident.modifiedAt = .now
         selectedReport = report
     }
 
-    private func duplicateReport(_ report: Report, in legalCase: LegalCase) {
-        let copy = Report(title: "\(report.title) (Copy)", context: report.context, preparedBy: report.preparedBy)
+    private func duplicateReport(_ report: Report, in incident: Incident) {
+        let copy = Report(title: "\(report.title) (Copy)", context: report.context, reportedBy: report.reportedBy)
         copy.includeHeader = report.includeHeader
         copy.includePageNumbers = report.includePageNumbers
         copy.includeDate = report.includeDate
@@ -437,16 +449,16 @@ struct SidebarView: View {
             sec.exhibitLabel = orig.exhibitLabel
             return sec
         }
-        copy.legalCase = legalCase
-        legalCase.reports.append(copy)
-        legalCase.modifiedAt = .now
+        copy.incident = incident
+        incident.reports.append(copy)
+        incident.modifiedAt = .now
         selectedReport = copy
     }
 
-    private func deleteReport(_ report: Report, from legalCase: LegalCase) {
+    private func deleteReport(_ report: Report, from incident: Incident) {
         if selectedReport == report { selectedReport = nil }
-        legalCase.reports.removeAll { $0.id == report.id }
+        incident.reports.removeAll { $0.id == report.id }
         modelContext.delete(report)
-        legalCase.modifiedAt = .now
+        incident.modifiedAt = .now
     }
 }

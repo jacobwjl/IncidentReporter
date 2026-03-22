@@ -1,41 +1,95 @@
 import SwiftData
 import Foundation
 
-// MARK: - Report Context
+// MARK: - Incident Category
 
-enum ReportContext: String, CaseIterable, Identifiable, Codable {
-    case legal = "Legal"
+enum IncidentCategory: String, CaseIterable, Identifiable, Codable {
+    case safety = "Safety"
+    case security = "Security"
+    case maintenance = "Maintenance"
+    case environmental = "Environmental"
+    case health = "Health"
     case workplace = "Workplace"
-    case incident = "Incident Report"
-    case complaint = "Complaint"
+    case vehicle = "Vehicle"
+    case property = "Property"
     case general = "General"
-    case custom = "Custom"
+    case other = "Other"
 
     var id: String { rawValue }
 
     var defaultFieldLabels: [(String, String)] {
         switch self {
-        case .legal:
-            return [("Case Number", ""), ("Court / Jurisdiction", ""), ("Filing Date", "")]
+        case .safety:
+            return [("Location", ""), ("Date/Time", ""), ("Reported By", ""), ("Injuries", "")]
+        case .security:
+            return [("Location", ""), ("Date/Time", ""), ("Reported By", ""), ("Suspect Description", "")]
+        case .maintenance:
+            return [("Location", ""), ("Equipment/Asset", ""), ("Reported By", ""), ("Date Discovered", "")]
+        case .environmental:
+            return [("Location", ""), ("Date/Time", ""), ("Substance/Material", ""), ("Reported By", "")]
+        case .health:
+            return [("Location", ""), ("Date/Time", ""), ("Person Affected", ""), ("Reported By", "")]
         case .workplace:
-            return [("Department", ""), ("Employee ID", ""), ("Supervisor", ""), ("Date of Incident", "")]
-        case .incident:
-            return [("Incident #", ""), ("Location", ""), ("Date / Time", ""), ("Reported By", "")]
-        case .complaint:
-            return [("Complaint #", ""), ("Filed By", ""), ("Against", ""), ("Date Filed", "")]
+            return [("Department", ""), ("Employee", ""), ("Supervisor", ""), ("Date of Incident", "")]
+        case .vehicle:
+            return [("Vehicle Info", ""), ("Location", ""), ("Date/Time", ""), ("Driver", "")]
+        case .property:
+            return [("Property Address", ""), ("Date/Time", ""), ("Reported By", ""), ("Damage Description", "")]
         case .general:
             return [("Reference #", ""), ("Date", "")]
-        case .custom:
+        case .other:
             return []
         }
     }
 
     var defaultSections: [ReportSection] {
         switch self {
-        case .legal:
+        case .safety:
             return [
-                ReportSection(order: 0, sectionType: .heading, content: "STATEMENT OF FACTS"),
+                ReportSection(order: 0, sectionType: .heading, content: "INCIDENT SUMMARY"),
                 ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "DESCRIPTION OF EVENTS"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "INJURIES/DAMAGES"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
+                ReportSection(order: 6, sectionType: .heading, content: "CORRECTIVE ACTIONS"),
+                ReportSection(order: 7, sectionType: .text, content: ""),
+            ]
+        case .security:
+            return [
+                ReportSection(order: 0, sectionType: .heading, content: "INCIDENT SUMMARY"),
+                ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "DETAILS"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "RESPONSE ACTIONS"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
+            ]
+        case .maintenance:
+            return [
+                ReportSection(order: 0, sectionType: .heading, content: "ISSUE DESCRIPTION"),
+                ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "ROOT CAUSE"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "REPAIR ACTIONS"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
+            ]
+        case .environmental:
+            return [
+                ReportSection(order: 0, sectionType: .heading, content: "SUMMARY"),
+                ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "DETAILS"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "ACTIONS"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
+            ]
+        case .health:
+            return [
+                ReportSection(order: 0, sectionType: .heading, content: "SUMMARY"),
+                ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "DETAILS"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "ACTIONS"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
             ]
         case .workplace:
             return [
@@ -46,24 +100,22 @@ enum ReportContext: String, CaseIterable, Identifiable, Codable {
                 ReportSection(order: 4, sectionType: .heading, content: "RESOLUTION"),
                 ReportSection(order: 5, sectionType: .text, content: ""),
             ]
-        case .incident:
+        case .vehicle:
             return [
-                ReportSection(order: 0, sectionType: .heading, content: "INCIDENT SUMMARY"),
-                ReportSection(order: 1, sectionType: .text, content: ""),
-                ReportSection(order: 2, sectionType: .heading, content: "TIMELINE OF EVENTS"),
-                ReportSection(order: 3, sectionType: .numberedList, content: ""),
-                ReportSection(order: 4, sectionType: .heading, content: "WITNESSES / PARTIES INVOLVED"),
-                ReportSection(order: 5, sectionType: .text, content: ""),
-                ReportSection(order: 6, sectionType: .heading, content: "SUPPORTING DOCUMENTATION"),
-                ReportSection(order: 7, sectionType: .text, content: ""),
-            ]
-        case .complaint:
-            return [
-                ReportSection(order: 0, sectionType: .heading, content: "NATURE OF COMPLAINT"),
+                ReportSection(order: 0, sectionType: .heading, content: "SUMMARY"),
                 ReportSection(order: 1, sectionType: .text, content: ""),
                 ReportSection(order: 2, sectionType: .heading, content: "DETAILS"),
                 ReportSection(order: 3, sectionType: .text, content: ""),
-                ReportSection(order: 4, sectionType: .heading, content: "DESIRED RESOLUTION"),
+                ReportSection(order: 4, sectionType: .heading, content: "ACTIONS"),
+                ReportSection(order: 5, sectionType: .text, content: ""),
+            ]
+        case .property:
+            return [
+                ReportSection(order: 0, sectionType: .heading, content: "SUMMARY"),
+                ReportSection(order: 1, sectionType: .text, content: ""),
+                ReportSection(order: 2, sectionType: .heading, content: "DETAILS"),
+                ReportSection(order: 3, sectionType: .text, content: ""),
+                ReportSection(order: 4, sectionType: .heading, content: "ACTIONS"),
                 ReportSection(order: 5, sectionType: .text, content: ""),
             ]
         case .general:
@@ -71,15 +123,15 @@ enum ReportContext: String, CaseIterable, Identifiable, Codable {
                 ReportSection(order: 0, sectionType: .heading, content: ""),
                 ReportSection(order: 1, sectionType: .text, content: ""),
             ]
-        case .custom:
+        case .other:
             return [ReportSection(order: 0, sectionType: .text, content: "")]
         }
     }
 }
 
-// MARK: - Case Status
+// MARK: - Incident Status
 
-enum CaseStatus: String, CaseIterable, Identifiable, Codable {
+enum IncidentStatus: String, CaseIterable, Identifiable, Codable {
     case open = "Open"
     case active = "Active"
     case underReview = "Under Review"
@@ -99,14 +151,14 @@ enum CaseStatus: String, CaseIterable, Identifiable, Codable {
     }
 }
 
-// MARK: - Case Priority
+// MARK: - Severity
 
-enum CasePriority: String, CaseIterable, Identifiable, Codable {
+enum Severity: String, CaseIterable, Identifiable, Codable {
     case none = "None"
     case low = "Low"
     case medium = "Medium"
     case high = "High"
-    case urgent = "Urgent"
+    case critical = "Critical"
 
     var id: String { rawValue }
 
@@ -116,7 +168,31 @@ enum CasePriority: String, CaseIterable, Identifiable, Codable {
         case .low: return "arrow.down"
         case .medium: return "equal"
         case .high: return "arrow.up"
-        case .urgent: return "exclamationmark.2"
+        case .critical: return "exclamationmark.2"
+        }
+    }
+}
+
+// MARK: - Incident Source
+
+enum IncidentSource: String, CaseIterable, Identifiable, Codable {
+    case inPerson = "In Person"
+    case email = "Email"
+    case phone = "Phone"
+    case online = "Online"
+    case anonymous = "Anonymous"
+    case other = "Other"
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .inPerson: return "person.fill"
+        case .email: return "envelope.fill"
+        case .phone: return "phone.fill"
+        case .online: return "globe"
+        case .anonymous: return "person.fill.questionmark"
+        case .other: return "ellipsis.circle"
         }
     }
 }
@@ -151,13 +227,13 @@ final class Tag {
     var name: String
     var colorHex: String
     var createdAt: Date
-    var cases: [LegalCase]
+    var incidents: [Incident]
 
     init(name: String, colorHex: String = TagColor.blue.hex) {
         self.name = name
         self.colorHex = colorHex
         self.createdAt = .now
-        self.cases = []
+        self.incidents = []
     }
 
     var tagColor: TagColor? {
@@ -176,7 +252,7 @@ final class Contact {
     var organization: String
     var notes: String
     var createdAt: Date
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     init(name: String = "", role: String = "", email: String = "", phone: String = "", organization: String = "", notes: String = "") {
         self.name = name
@@ -198,7 +274,7 @@ final class Deadline {
     var isCompleted: Bool
     var notes: String
     var createdAt: Date
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     init(title: String = "", dueDate: Date = .now, notes: String = "") {
         self.title = title
@@ -221,14 +297,14 @@ final class ReportTemplate {
     var sectionData: Data
     var createdAt: Date
 
-    init(name: String, context: ReportContext, sections: [TemplateSectionData]) {
+    init(name: String, context: IncidentCategory, sections: [TemplateSectionData]) {
         self.name = name
         self.contextTypeRaw = context.rawValue
         self.createdAt = .now
         self.sectionData = (try? JSONEncoder().encode(sections)) ?? Data()
     }
 
-    var context: ReportContext { ReportContext(rawValue: contextTypeRaw) ?? .general }
+    var context: IncidentCategory { IncidentCategory(rawValue: contextTypeRaw) ?? .general }
     var sections: [TemplateSectionData] {
         (try? JSONDecoder().decode([TemplateSectionData].self, from: sectionData)) ?? []
     }
@@ -248,7 +324,7 @@ final class ActivityLogEntry {
     var message: String
     var timestamp: Date
     var entryTypeRaw: String
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     init(message: String, entryType: ActivityType = .note) {
         self.message = message
@@ -261,6 +337,7 @@ final class ActivityLogEntry {
 
 enum ActivityType: String, CaseIterable, Identifiable, Codable {
     case note = "Note"
+    case update = "Update"
     case statusChange = "Status Change"
     case milestone = "Milestone"
     case filing = "Filing"
@@ -271,6 +348,7 @@ enum ActivityType: String, CaseIterable, Identifiable, Codable {
     var icon: String {
         switch self {
         case .note: return "note.text"
+        case .update: return "pencil.circle"
         case .statusChange: return "arrow.triangle.2.circlepath"
         case .milestone: return "flag"
         case .filing: return "doc.badge.plus"
@@ -279,10 +357,10 @@ enum ActivityType: String, CaseIterable, Identifiable, Codable {
     }
 }
 
-// MARK: - Report Case
+// MARK: - Incident
 
 @Model
-final class LegalCase {
+final class Incident {
     var title: String
     var referenceNumber: String
     var contextTypeRaw: String
@@ -292,31 +370,34 @@ final class LegalCase {
     var statusRaw: String
     var priorityRaw: String
     var isStarred: Bool
+    var location: String
+    var sourceRaw: String
 
-    @Relationship(deleteRule: .cascade, inverse: \Report.legalCase)
+    @Relationship(deleteRule: .cascade, inverse: \Report.incident)
     var reports: [Report]
 
-    @Relationship(deleteRule: .cascade, inverse: \FileAttachment.legalCase)
+    @Relationship(deleteRule: .cascade, inverse: \FileAttachment.incident)
     var files: [FileAttachment]
 
-    @Relationship(deleteRule: .cascade, inverse: \CaseField.legalCase)
-    var fields: [CaseField]
+    @Relationship(deleteRule: .cascade, inverse: \IncidentField.incident)
+    var fields: [IncidentField]
 
-    @Relationship(deleteRule: .cascade, inverse: \Contact.legalCase)
+    @Relationship(deleteRule: .cascade, inverse: \Contact.incident)
     var contacts: [Contact]
 
-    @Relationship(deleteRule: .cascade, inverse: \Deadline.legalCase)
+    @Relationship(deleteRule: .cascade, inverse: \Deadline.incident)
     var deadlines: [Deadline]
 
-    @Relationship(deleteRule: .cascade, inverse: \ActivityLogEntry.legalCase)
+    @Relationship(deleteRule: .cascade, inverse: \ActivityLogEntry.incident)
     var activityLog: [ActivityLogEntry]
 
-    @Relationship(inverse: \Tag.cases)
+    @Relationship(inverse: \Tag.incidents)
     var tags: [Tag]
 
     init(
-        title: String = "", referenceNumber: String = "", context: ReportContext = .general,
-        notes: String = "", status: CaseStatus = .open, priority: CasePriority = .none
+        title: String = "", referenceNumber: String = "", context: IncidentCategory = .general,
+        notes: String = "", status: IncidentStatus = .open, priority: Severity = .none,
+        location: String = "", source: IncidentSource = .inPerson
     ) {
         self.title = title
         self.referenceNumber = referenceNumber
@@ -327,6 +408,8 @@ final class LegalCase {
         self.statusRaw = status.rawValue
         self.priorityRaw = priority.rawValue
         self.isStarred = false
+        self.location = location
+        self.sourceRaw = source.rawValue
         self.reports = []
         self.files = []
         self.tags = []
@@ -334,21 +417,25 @@ final class LegalCase {
         self.deadlines = []
         self.activityLog = []
         self.fields = context.defaultFieldLabels.enumerated().map { i, pair in
-            CaseField(label: pair.0, value: pair.1, order: i)
+            IncidentField(label: pair.0, value: pair.1, order: i)
         }
     }
 
-    var context: ReportContext {
-        get { ReportContext(rawValue: contextTypeRaw) ?? .general }
+    var context: IncidentCategory {
+        get { IncidentCategory(rawValue: contextTypeRaw) ?? .general }
         set { contextTypeRaw = newValue.rawValue }
     }
-    var status: CaseStatus {
-        get { CaseStatus(rawValue: statusRaw) ?? .open }
+    var status: IncidentStatus {
+        get { IncidentStatus(rawValue: statusRaw) ?? .open }
         set { statusRaw = newValue.rawValue }
     }
-    var priority: CasePriority {
-        get { CasePriority(rawValue: priorityRaw) ?? .none }
+    var priority: Severity {
+        get { Severity(rawValue: priorityRaw) ?? .none }
         set { priorityRaw = newValue.rawValue }
+    }
+    var source: IncidentSource {
+        get { IncidentSource(rawValue: sourceRaw) ?? .inPerson }
+        set { sourceRaw = newValue.rawValue }
     }
 
     var displayTitle: String {
@@ -356,7 +443,7 @@ final class LegalCase {
         return title.isEmpty ? "Untitled" : title
     }
 
-    var sortedFields: [CaseField] { fields.sorted { $0.order < $1.order } }
+    var sortedFields: [IncidentField] { fields.sorted { $0.order < $1.order } }
     var sortedDeadlines: [Deadline] { deadlines.sorted { $0.dueDate < $1.dueDate } }
     var nextDeadline: Deadline? { deadlines.filter { !$0.isCompleted }.sorted { $0.dueDate < $1.dueDate }.first }
     var overdueDeadlines: [Deadline] { deadlines.filter { $0.isOverdue } }
@@ -371,19 +458,19 @@ final class LegalCase {
 
     func addLogEntry(_ message: String, type: ActivityType = .note) {
         let entry = ActivityLogEntry(message: message, entryType: type)
-        entry.legalCase = self
+        entry.incident = self
         activityLog.append(entry)
     }
 }
 
-// MARK: - Custom Field
+// MARK: - Incident Field
 
 @Model
-final class CaseField {
+final class IncidentField {
     var label: String
     var value: String
     var order: Int
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     init(label: String = "", value: String = "", order: Int = 0) {
         self.label = label
@@ -400,7 +487,7 @@ final class Report {
     var contextTypeRaw: String
     var createdAt: Date
     var modifiedAt: Date
-    var preparedBy: String
+    var reportedBy: String
     var includeHeader: Bool
     var includePageNumbers: Bool
     var includeDate: Bool
@@ -409,17 +496,17 @@ final class Report {
     var batesStartNumber: Int
     var confidentialityNotice: String
 
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     @Relationship(deleteRule: .cascade, inverse: \ReportSection.report)
     var sections: [ReportSection]
 
-    init(title: String = "", context: ReportContext = .general, preparedBy: String = "") {
+    init(title: String = "", context: IncidentCategory = .general, reportedBy: String = "") {
         self.title = title
         self.contextTypeRaw = context.rawValue
         self.createdAt = .now
         self.modifiedAt = .now
-        self.preparedBy = preparedBy
+        self.reportedBy = reportedBy
         self.includeHeader = true
         self.includePageNumbers = true
         self.includeDate = true
@@ -430,7 +517,7 @@ final class Report {
         self.sections = context.defaultSections
     }
 
-    var context: ReportContext { ReportContext(rawValue: contextTypeRaw) ?? .general }
+    var context: IncidentCategory { IncidentCategory(rawValue: contextTypeRaw) ?? .general }
     var sortedSections: [ReportSection] { sections.sorted { $0.order < $1.order } }
 
     var wordCount: Int {
@@ -443,13 +530,13 @@ final class Report {
 
     var plainTextExport: String {
         var output = ""
-        if includeDate { output += Date.now.legalFormatted + "\n\n" }
+        if includeDate { output += Date.now.dateFormatted + "\n\n" }
         if !title.isEmpty {
             output += title.uppercased() + "\n"
             output += String(repeating: "\u{2500}", count: title.count) + "\n\n"
         }
-        if includeHeader, let legalCase {
-            for (label, value) in legalCase.headerBlock { output += "\(label): \(value)\n" }
+        if includeHeader, let incident {
+            for (label, value) in incident.headerBlock { output += "\(label): \(value)\n" }
             output += "\n"
         }
         for section in sortedSections {
@@ -508,7 +595,7 @@ final class Report {
                 output += "\n"
             }
         }
-        if !preparedBy.isEmpty { output += "Prepared by: \(preparedBy)\n" }
+        if !reportedBy.isEmpty { output += "Reported by: \(reportedBy)\n" }
         if !confidentialityNotice.isEmpty { output += "\n\(confidentialityNotice)\n" }
         return output
     }
@@ -643,7 +730,7 @@ final class FileAttachment {
     @Attribute(.externalStorage) var thumbnailData: Data?
 
     var section: ReportSection?
-    var legalCase: LegalCase?
+    var incident: Incident?
 
     init(filename: String, fileType: FileType, fileData: Data?, originalPath: String = "", notes: String = "") {
         self.filename = filename

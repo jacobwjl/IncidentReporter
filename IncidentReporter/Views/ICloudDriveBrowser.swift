@@ -185,7 +185,7 @@ struct ICloudDriveBrowser: View {
                                     .foregroundStyle(.secondary)
 
                                 if let mod = item.modifiedDate {
-                                    Text("Modified: \(mod.shortLegal)")
+                                    Text("Modified: \(mod.shortFormatted)")
                                         .font(.caption)
                                         .foregroundStyle(.secondary)
                                 }
@@ -332,7 +332,7 @@ struct ICloudItemRow: View {
             Spacer()
 
             if let date = item.modifiedDate, !item.isDirectory {
-                Text(date.shortLegal)
+                Text(date.shortFormatted)
                     .font(.caption2)
                     .foregroundStyle(.tertiary)
             }

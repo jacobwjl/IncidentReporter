@@ -3,13 +3,13 @@ import AppKit
 
 struct ReportPreviewView: View {
     let report: Report
-    let legalCase: LegalCase?
+    let incident: Incident?
 
-    @AppStorage("firmName") private var firmName = ""
-    @AppStorage("firmAddress") private var firmAddress = ""
+    @AppStorage("orgName") private var orgName = ""
+    @AppStorage("orgAddress") private var orgAddress = ""
     @AppStorage("headerAlignment") private var headerAlignment = "left"
-    @AppStorage("showFirmNameInHeader") private var showFirmNameInHeader = true
-    @AppStorage("showFirmAddressInHeader") private var showFirmAddressInHeader = true
+    @AppStorage("showOrgNameInHeader") private var showOrgNameInHeader = true
+    @AppStorage("showOrgAddressInHeader") private var showOrgAddressInHeader = true
     @AppStorage("headerSeparatorStyle") private var headerSeparatorStyle = "line"
     @AppStorage("customFooterText") private var customFooterText = ""
     @AppStorage("customWatermarkText") private var customWatermarkText = ""
@@ -44,12 +44,12 @@ struct ReportPreviewView: View {
                 // Simulated printed page
                 ZStack {
                     VStack(alignment: .leading, spacing: 0) {
-                        // Firm header
-                        firmHeader
+                        // Organization header
+                        orgHeader
 
                         // Header box
-                        if report.includeHeader, let legalCase {
-                            headerBox(legalCase)
+                        if report.includeHeader, let incident {
+                            headerBox(incident)
                                 .padding(.bottom, 16)
                         }
 
@@ -66,17 +66,17 @@ struct ReportPreviewView: View {
                                 .padding(.bottom, 14)
                         }
 
-                        // Date + Prepared by line
-                        if report.includeDate || !report.preparedBy.isEmpty {
+                        // Date + Reported by line
+                        if report.includeDate || !report.reportedBy.isEmpty {
                             HStack {
                                 if report.includeDate {
-                                    Text("Date: \(Date.now.legalFormatted)")
+                                    Text("Date: \(Date.now.dateFormatted)")
                                         .font(.system(size: 10))
                                         .foregroundStyle(.black.opacity(0.6))
                                 }
                                 Spacer()
-                                if !report.preparedBy.isEmpty {
-                                    Text("Prepared by: \(report.preparedBy)")
+                                if !report.reportedBy.isEmpty {
+                                    Text("Reported by: \(report.reportedBy)")
                                         .font(.system(size: 10))
                                         .foregroundStyle(.black.opacity(0.6))
                                 }
@@ -128,22 +128,22 @@ struct ReportPreviewView: View {
         .background(Color(nsColor: .windowBackgroundColor))
     }
 
-    // MARK: - Firm Header
+    // MARK: - Organization Header
 
     @ViewBuilder
-    private var firmHeader: some View {
-        let showFirm = showFirmNameInHeader && !firmName.isEmpty
-        let showAddr = showFirmAddressInHeader && !firmAddress.isEmpty
+    private var orgHeader: some View {
+        let showOrg = showOrgNameInHeader && !orgName.isEmpty
+        let showAddr = showOrgAddressInHeader && !orgAddress.isEmpty
 
-        if showFirm || showAddr {
+        if showOrg || showAddr {
             VStack(alignment: resolvedAlignment, spacing: 3) {
-                if showFirm {
-                    Text(firmName)
+                if showOrg {
+                    Text(orgName)
                         .font(.system(size: 13, weight: .bold))
                         .multilineTextAlignment(resolvedTextAlignment)
                 }
                 if showAddr {
-                    Text(firmAddress)
+                    Text(orgAddress)
                         .font(.system(size: 10))
                         .foregroundStyle(.black.opacity(0.6))
                         .multilineTextAlignment(resolvedTextAlignment)
@@ -183,28 +183,28 @@ struct ReportPreviewView: View {
 
     // MARK: - Header Box
 
-    private func headerBox(_ legalCase: LegalCase) -> some View {
+    private func headerBox(_ incident: Incident) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(legalCase.title.isEmpty ? "Untitled" : legalCase.title)
+            Text(incident.title.isEmpty ? "Untitled" : incident.title)
                 .font(.system(size: 13, weight: .bold))
 
-            if !legalCase.referenceNumber.isEmpty {
+            if !incident.referenceNumber.isEmpty {
                 HStack(spacing: 4) {
                     Text("Ref:")
                         .font(.system(size: 10, weight: .semibold))
                         .foregroundStyle(.black.opacity(0.5))
-                    Text(legalCase.referenceNumber)
+                    Text(incident.referenceNumber)
                         .font(.system(size: 10, design: .monospaced))
                 }
             }
 
-            if !legalCase.sortedFields.isEmpty {
+            if !incident.sortedFields.isEmpty {
                 Rectangle()
                     .fill(Color.black.opacity(0.15))
                     .frame(height: 0.5)
                     .padding(.vertical, 2)
 
-                ForEach(legalCase.sortedFields) { field in
+                ForEach(incident.sortedFields) { field in
                     if !field.value.isEmpty {
                         HStack(alignment: .top, spacing: 4) {
                             Text("\(field.label):")
