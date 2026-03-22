@@ -38,6 +38,8 @@ struct ReportPreviewView: View {
         }
     }
 
+    private var theme: CategoryTheme { report.context.theme }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
@@ -55,13 +57,13 @@ struct ReportPreviewView: View {
 
                         // Report title
                         if !report.title.isEmpty {
-                            Text(report.title.uppercased())
+                            Text(theme.uppercaseHeadings ? report.title.uppercased() : report.title)
                                 .font(.system(size: 16, weight: .bold))
-                                .tracking(1)
+                                .tracking(theme.headingTracking)
                                 .padding(.bottom, 4)
 
                             Rectangle()
-                                .fill(Color.black)
+                                .fill(Color(theme.printAccent))
                                 .frame(height: 2)
                                 .padding(.bottom, 14)
                         }
@@ -184,46 +186,55 @@ struct ReportPreviewView: View {
     // MARK: - Header Box
 
     private func headerBox(_ incident: Incident) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(incident.title.isEmpty ? "Untitled" : incident.title)
-                .font(.system(size: 13, weight: .bold))
-
-            if !incident.referenceNumber.isEmpty {
-                HStack(spacing: 4) {
-                    Text("Ref:")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundStyle(.black.opacity(0.5))
-                    Text(incident.referenceNumber)
-                        .font(.system(size: 10, design: .monospaced))
-                }
+        HStack(spacing: 0) {
+            if theme.headerBoxStyle == .accentBar {
+                Rectangle()
+                    .fill(theme.accentColor)
+                    .frame(width: 4)
             }
 
-            if !incident.sortedFields.isEmpty {
-                Rectangle()
-                    .fill(Color.black.opacity(0.15))
-                    .frame(height: 0.5)
-                    .padding(.vertical, 2)
+            VStack(alignment: .leading, spacing: 6) {
+                Text(incident.title.isEmpty ? "Untitled" : incident.title)
+                    .font(.system(size: 13, weight: .bold))
 
-                ForEach(incident.sortedFields) { field in
-                    if !field.value.isEmpty {
-                        HStack(alignment: .top, spacing: 4) {
-                            Text("\(field.label):")
-                                .font(.system(size: 10, weight: .semibold))
-                                .foregroundStyle(.black.opacity(0.5))
-                                .frame(width: 100, alignment: .trailing)
-                            Text(field.value)
-                                .font(.system(size: 10))
+                if !incident.referenceNumber.isEmpty {
+                    HStack(spacing: 4) {
+                        Text("Ref:")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(.black.opacity(0.5))
+                        Text(incident.referenceNumber)
+                            .font(.system(size: 10, design: .monospaced))
+                    }
+                }
+
+                if !incident.sortedFields.isEmpty {
+                    Rectangle()
+                        .fill(Color.black.opacity(0.15))
+                        .frame(height: 0.5)
+                        .padding(.vertical, 2)
+
+                    ForEach(incident.sortedFields) { field in
+                        if !field.value.isEmpty {
+                            HStack(alignment: .top, spacing: 4) {
+                                Text("\(field.label):")
+                                    .font(.system(size: 10, weight: .semibold))
+                                    .foregroundStyle(.black.opacity(0.5))
+                                    .frame(width: 100, alignment: .trailing)
+                                Text(field.value)
+                                    .font(.system(size: 10))
+                            }
                         }
                     }
                 }
             }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(Color.black.opacity(0.03))
+        .background(theme.headerBoxStyle == .minimal ? Color.clear : Color(theme.printHeaderBackground))
         .overlay(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(Color.black.opacity(0.2), lineWidth: 1)
+                .stroke(theme.headerBoxStyle == .minimal ? Color.clear : Color(theme.printHeaderBorder), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 4))
     }
@@ -234,20 +245,46 @@ struct ReportPreviewView: View {
     private func sectionView(_ section: ReportSection) -> some View {
         switch section.sectionType {
         case .heading:
-            VStack(alignment: .leading, spacing: 3) {
-                Text(section.content.uppercased())
-                    .font(.system(size: 12, weight: .bold))
-                    .tracking(0.5)
-                Rectangle()
-                    .fill(Color.black.opacity(0.3))
-                    .frame(height: 0.5)
+            Group {
+                switch theme.headingStyle {
+                case .underline:
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(section.content.uppercased())
+                            .font(.system(size: 12, weight: .bold))
+                            .tracking(theme.headingTracking)
+                        Rectangle()
+                            .fill(Color(theme.printAccent))
+                            .frame(height: 0.5)
+                    }
+                case .allCaps:
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(section.content.uppercased())
+                            .font(theme.swiftUIHeadingFont)
+                            .tracking(theme.headingTracking)
+                        Rectangle()
+                            .fill(Color(theme.printAccent))
+                            .frame(height: 0.5)
+                    }
+                case .accentSidebar:
+                    HStack(spacing: 8) {
+                        Rectangle()
+                            .fill(theme.accentColor)
+                            .frame(width: 3)
+                        Text(section.content)
+                            .font(theme.swiftUIHeadingFont)
+                    }
+                    .fixedSize(horizontal: false, vertical: true)
+                case .bold:
+                    Text(section.content)
+                        .font(theme.swiftUIHeadingFont)
+                }
             }
             .padding(.top, 18)
             .padding(.bottom, 8)
 
         case .text:
             Text(section.content)
-                .font(.system(size: 11))
+                .font(theme.swiftUIBodyFont)
                 .lineSpacing(6)
                 .textSelection(.enabled)
                 .padding(.bottom, 10)
@@ -408,7 +445,7 @@ struct ReportPreviewView: View {
         return VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .top, spacing: 0) {
                 RoundedRectangle(cornerRadius: 1)
-                    .fill(Color.black.opacity(0.25))
+                    .fill(theme.accentColor)
                     .frame(width: 3)
 
                 Text(quoteText)

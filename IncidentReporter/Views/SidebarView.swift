@@ -276,7 +276,7 @@ struct SidebarView: View {
                             Text(report.title.isEmpty ? "Untitled Report" : report.title)
                                 .font(.body)
                                 .lineLimit(1)
-                            Text(report.context.rawValue)
+                            Label(report.context.rawValue, systemImage: report.context.theme.icon)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
@@ -333,11 +333,11 @@ struct SidebarView: View {
                         }
 
                         HStack(spacing: 6) {
-                            Text(incident.context.rawValue)
+                            Label(incident.context.rawValue, systemImage: incident.context.theme.icon)
                                 .font(.caption2)
                                 .padding(.horizontal, 5)
                                 .padding(.vertical, 1)
-                                .background(.blue.opacity(0.1))
+                                .background(incident.context.theme.accentColor.opacity(0.1))
                                 .clipShape(Capsule())
 
                             if !incident.referenceNumber.isEmpty {

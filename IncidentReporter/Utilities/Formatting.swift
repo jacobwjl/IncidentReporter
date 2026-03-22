@@ -155,3 +155,9 @@ extension Deadline {
         return "clock"
     }
 }
+
+// MARK: - Category Theme Convenience
+
+extension IncidentCategory {
+    var accentSwiftUIColor: Color { theme.accentColor }
+}

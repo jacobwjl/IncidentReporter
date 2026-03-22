@@ -13,6 +13,7 @@
 		8247A06444519B688B1E74D1 /* ReportPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 640D77A825102EF5854E2AB8 /* ReportPreviewView.swift */; };
 		8615760EB73467E308BE40FF /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 740781AA55C8ACA26E03CBE6 /* Models.swift */; };
 		8C27C3FF4450E1CFCB299BA1 /* AttachmentViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED14B95ACC6BBC72F66C864 /* AttachmentViews.swift */; };
+		6F1A3B8E2D4C90A7E5F83012 /* DynamicFieldsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1A3B8D2D4C90A7E5F83011 /* DynamicFieldsView.swift */; };
 		99391932CBFD3AA96CC1EDD3 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C498BE398AB20E7226B6AE3 /* DashboardView.swift */; };
 		AB07A0EAC74CDE0F8DA7C32C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B00941B28343659DD1B0FA /* SettingsView.swift */; };
 		BE19BEAAF785B10649610591 /* ICloudDriveBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CCDB2F8F2D83B54C0F80687 /* ICloudDriveBrowser.swift */; };
@@ -22,6 +23,8 @@
 		ECE01BC836DF65C06861E9F1 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAE5DDFBEBC4609C6404D2B /* CalendarView.swift */; };
 		F08038AC1A063232432F4C51 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E485EFB15B1659F8A4AEC8CD /* SidebarView.swift */; };
 		F292EB106AC41BE51F081DA5 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1613F085011D9BA9B5B4E6F /* Formatting.swift */; };
+		B3D7E41A2C9F58E10D4A6B73 /* CategoryTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A1F29B7E3D04C5A920B146 /* CategoryTheme.swift */; };
+		A2B4C5D6E7F80912A3B4C5D6 /* SchemaVersioning.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E5F6A7B8C90123D4E5F6A7 /* SchemaVersioning.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,11 +32,14 @@
 		12D0B1215ED8BAFB81E89C5B /* IncidentReporter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IncidentReporter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E9AD43A598DDC6C6DE2D1AE /* ReportEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportEditorView.swift; sourceTree = "<group>"; };
 		3BAE5DDFBEBC4609C6404D2B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		6F1A3B8D2D4C90A7E5F83011 /* DynamicFieldsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicFieldsView.swift; sourceTree = "<group>"; };
 		640D77A825102EF5854E2AB8 /* ReportPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPreviewView.swift; sourceTree = "<group>"; };
 		740781AA55C8ACA26E03CBE6 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		D3E5F6A7B8C90123D4E5F6A7 /* SchemaVersioning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchemaVersioning.swift; sourceTree = "<group>"; };
 		7C498BE398AB20E7226B6AE3 /* DashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardView.swift; sourceTree = "<group>"; };
 		9CCDB2F8F2D83B54C0F80687 /* ICloudDriveBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ICloudDriveBrowser.swift; sourceTree = "<group>"; };
 		A1613F085011D9BA9B5B4E6F /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		C8A1F29B7E3D04C5A920B146 /* CategoryTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTheme.swift; sourceTree = "<group>"; };
 		ABFEC75587F32FAD7C033B69 /* IncidentEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncidentEditorView.swift; sourceTree = "<group>"; };
 		AED14B95ACC6BBC72F66C864 /* AttachmentViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentViews.swift; sourceTree = "<group>"; };
 		D1B00941B28343659DD1B0FA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -79,6 +85,7 @@
 				3BAE5DDFBEBC4609C6404D2B /* CalendarView.swift */,
 				EA57233A82FF686CD1C516DA /* ContentView.swift */,
 				7C498BE398AB20E7226B6AE3 /* DashboardView.swift */,
+				6F1A3B8D2D4C90A7E5F83011 /* DynamicFieldsView.swift */,
 				9CCDB2F8F2D83B54C0F80687 /* ICloudDriveBrowser.swift */,
 				ABFEC75587F32FAD7C033B69 /* IncidentEditorView.swift */,
 				2E9AD43A598DDC6C6DE2D1AE /* ReportEditorView.swift */,
@@ -108,6 +115,7 @@
 		9ABE5B21C100B2712C77BB5B /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				C8A1F29B7E3D04C5A920B146 /* CategoryTheme.swift */,
 				A1613F085011D9BA9B5B4E6F /* Formatting.swift */,
 			);
 			path = Utilities;
@@ -131,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				740781AA55C8ACA26E03CBE6 /* Models.swift */,
+				D3E5F6A7B8C90123D4E5F6A7 /* SchemaVersioning.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -196,14 +205,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C27C3FF4450E1CFCB299BA1 /* AttachmentViews.swift in Sources */,
+				B3D7E41A2C9F58E10D4A6B73 /* CategoryTheme.swift in Sources */,
 				ECE01BC836DF65C06861E9F1 /* CalendarView.swift in Sources */,
 				D9122C3DBE6B8CE60A9DB39F /* ContentView.swift in Sources */,
 				99391932CBFD3AA96CC1EDD3 /* DashboardView.swift in Sources */,
+				6F1A3B8E2D4C90A7E5F83012 /* DynamicFieldsView.swift in Sources */,
 				F292EB106AC41BE51F081DA5 /* Formatting.swift in Sources */,
 				BE19BEAAF785B10649610591 /* ICloudDriveBrowser.swift in Sources */,
 				CCD882D48F7CBC11A58DB7E4 /* IncidentEditorView.swift in Sources */,
 				44FC7FFA94492A4D343636C4 /* IncidentReporterApp.swift in Sources */,
 				8615760EB73467E308BE40FF /* Models.swift in Sources */,
+				A2B4C5D6E7F80912A3B4C5D6 /* SchemaVersioning.swift in Sources */,
 				D36D52E91A342F049FAD3096 /* PrintService.swift in Sources */,
 				0A272F620572E833B878F9DC /* ReportEditorView.swift in Sources */,
 				8247A06444519B688B1E74D1 /* ReportPreviewView.swift in Sources */,

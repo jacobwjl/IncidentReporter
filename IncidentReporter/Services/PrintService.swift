@@ -7,6 +7,7 @@ class DocumentView: NSView {
     let report: Report
     let incident: Incident?
     private var totalPages = 1
+    private let theme: CategoryTheme
 
     // Read settings from UserDefaults at render time
     private let orgName: String
@@ -21,6 +22,7 @@ class DocumentView: NSView {
     init(report: Report, incident: Incident?) {
         self.report = report
         self.incident = incident
+        self.theme = report.context.theme
 
         let defaults = UserDefaults.standard
         self.orgName = defaults.string(forKey: "orgName") ?? ""
@@ -256,18 +258,20 @@ class DocumentView: NSView {
             }
 
             let titleAttrs: [NSAttributedString.Key: Any] = [
-                .font: AppFonts.title(size: 16),
+                .font: theme.nsHeading(size: 16),
                 .foregroundColor: NSColor.black,
-                .paragraphStyle: titleStyle
+                .paragraphStyle: titleStyle,
+                .kern: theme.headingTracking
             ]
-            let title = NSAttributedString(string: report.title.uppercased(), attributes: titleAttrs)
+            let titleText = theme.uppercaseHeadings ? report.title.uppercased() : report.title
+            let title = NSAttributedString(string: titleText, attributes: titleAttrs)
             y -= 20
             let titleRect = NSRect(x: PageLayout.marginLeft, y: y, width: PageLayout.contentWidth, height: 20)
             title.draw(in: titleRect)
             y -= 6
 
             // Underline
-            context.setStrokeColor(NSColor.black.cgColor)
+            context.setStrokeColor(theme.printAccent.cgColor)
             context.setLineWidth(1.5)
             context.move(to: CGPoint(x: PageLayout.marginLeft, y: y))
             context.addLine(to: CGPoint(x: PageLayout.pageWidth - PageLayout.marginRight, y: y))
@@ -316,13 +320,23 @@ class DocumentView: NSView {
         let boxRect = NSRect(x: x, y: startY - boxHeight, width: w, height: boxHeight)
 
         // Box background
-        context.setFillColor(NSColor(white: 0.96, alpha: 1.0).cgColor)
-        context.fill(boxRect)
+        if theme.headerBoxStyle != .minimal {
+            context.setFillColor(theme.printHeaderBackground.cgColor)
+            context.fill(boxRect)
+        }
 
         // Box border
-        context.setStrokeColor(NSColor(white: 0.3, alpha: 1.0).cgColor)
-        context.setLineWidth(0.75)
-        context.stroke(boxRect)
+        if theme.headerBoxStyle != .minimal {
+            context.setStrokeColor(theme.printHeaderBorder.cgColor)
+            context.setLineWidth(0.75)
+            context.stroke(boxRect)
+        }
+
+        // Accent bar
+        if theme.headerBoxStyle == .accentBar {
+            context.setFillColor(theme.printAccent.cgColor)
+            context.fill(NSRect(x: boxRect.minX, y: boxRect.minY, width: 4, height: boxRect.height))
+        }
 
         // Text
         var y = startY - padding - lineHeight
@@ -388,16 +402,35 @@ class DocumentView: NSView {
         for section in report.sortedSections {
             switch section.sectionType {
             case .heading:
-                let attrs: [NSAttributedString.Key: Any] = [
-                    .font: AppFonts.heading(size: 12),
-                    .foregroundColor: NSColor.black,
-                    .paragraphStyle: headingStyle
+                let headingText: String
+                switch theme.headingStyle {
+                case .allCaps, .underline:
+                    headingText = section.content.uppercased()
+                case .accentSidebar, .bold:
+                    headingText = section.content
+                }
+
+                let headingAttrs: [NSAttributedString.Key: Any] = [
+                    .font: theme.nsHeading(size: 12),
+                    .foregroundColor: theme.printHeadingColor,
+                    .paragraphStyle: headingStyle,
+                    .kern: theme.headingTracking
                 ]
-                result.append(NSAttributedString(string: "\(section.content.uppercased())\n", attributes: attrs))
+
+                if theme.headingStyle == .accentSidebar {
+                    let barAttrs: [NSAttributedString.Key: Any] = [
+                        .font: theme.nsHeading(size: 12),
+                        .foregroundColor: theme.printAccent,
+                        .paragraphStyle: headingStyle
+                    ]
+                    result.append(NSAttributedString(string: "\u{2758} ", attributes: barAttrs))
+                }
+
+                result.append(NSAttributedString(string: "\(headingText)\n", attributes: headingAttrs))
 
             case .text:
                 let attrs: [NSAttributedString.Key: Any] = [
-                    .font: AppFonts.body(size: 11),
+                    .font: theme.nsBody(size: 11),
                     .foregroundColor: NSColor.black,
                     .paragraphStyle: bodyStyle
                 ]
@@ -632,7 +665,7 @@ class DocumentView: NSView {
 
                     let barAttrs: [NSAttributedString.Key: Any] = [
                         .font: AppFonts.body(size: 11),
-                        .foregroundColor: PrintColors.accentBlue,
+                        .foregroundColor: theme.printAccent,
                         .paragraphStyle: lineStyle
                     ]
                     let textAttrs: [NSAttributedString.Key: Any] = [

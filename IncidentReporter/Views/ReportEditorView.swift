@@ -184,7 +184,7 @@ struct ReportEditorView: View {
             Spacer()
             if report.includeBatesNumbers {
                 Label("Bates: \(report.batesNumber(for: 1))", systemImage: "number")
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(report.context.theme.accentColor)
             }
             Text("Created \(report.createdAt.shortFormatted)")
         }
@@ -261,7 +261,7 @@ struct ReportEditorView: View {
                     .font(.caption)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 2)
-                    .background(.blue.opacity(0.1))
+                    .background(report.context.theme.accentColor.opacity(0.1))
                     .clipShape(Capsule())
 
                 if let incident {

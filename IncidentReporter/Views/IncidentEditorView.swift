@@ -228,7 +228,7 @@ struct IncidentDetailView: View {
                                 .font(.caption)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 3)
-                                .background(.red.opacity(0.1))
+                                .background(incident.context.theme.accentColor.opacity(0.1))
                                 .clipShape(Capsule())
                             if !incident.referenceNumber.isEmpty {
                                 Text(incident.referenceNumber)
@@ -327,53 +327,7 @@ struct IncidentDetailView: View {
                 Divider()
 
                 // MARK: Custom Fields
-                if !incident.sortedFields.isEmpty {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Details")
-                            .font(AppFonts.swiftUIHeading)
-
-                        ForEach(incident.sortedFields) { field in
-                            HStack(alignment: .top) {
-                                TextField("Label", text: Binding(
-                                    get: { field.label },
-                                    set: { field.label = $0; incident.modifiedAt = .now }
-                                ))
-                                .font(.caption)
-                                .fontWeight(.medium)
-                                .frame(width: 130, alignment: .trailing)
-                                .multilineTextAlignment(.trailing)
-                                .foregroundStyle(.secondary)
-
-                                TextField("Value", text: Binding(
-                                    get: { field.value },
-                                    set: { field.value = $0; incident.modifiedAt = .now }
-                                ))
-                                .textFieldStyle(.roundedBorder)
-                            }
-                        }
-
-                        Button {
-                            let field = IncidentField(label: "", value: "", order: incident.fields.count)
-                            field.incident = incident
-                            incident.fields.append(field)
-                        } label: {
-                            Label("Add Field", systemImage: "plus")
-                                .font(.caption)
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
-                    }
-                } else {
-                    Button {
-                        let field = IncidentField(label: "Field", value: "", order: 0)
-                        field.incident = incident
-                        incident.fields.append(field)
-                    } label: {
-                        Label("Add Detail Fields", systemImage: "plus.circle")
-                    }
-                    .buttonStyle(.bordered)
-                    .controlSize(.small)
-                }
+                DynamicFieldsView(incident: incident)
 
                 // MARK: Notes
                 if !incident.notes.isEmpty {
@@ -401,7 +355,7 @@ struct IncidentDetailView: View {
                                 .font(.caption)
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(incident.context.theme.accentColor)
                         .popover(isPresented: $showingAddTag, arrowEdge: .bottom) {
                             addTagPopover
                         }
@@ -438,7 +392,7 @@ struct IncidentDetailView: View {
                                 .font(.caption)
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(incident.context.theme.accentColor)
                     }
 
                     if incident.sortedDeadlines.isEmpty && !showingAddDeadline {
@@ -551,7 +505,7 @@ struct IncidentDetailView: View {
                                 .font(.caption)
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(incident.context.theme.accentColor)
                     }
 
                     if incident.contacts.isEmpty {
@@ -686,7 +640,7 @@ struct IncidentDetailView: View {
                                 .font(.caption)
                         }
                         .buttonStyle(.plain)
-                        .foregroundStyle(.blue)
+                        .foregroundStyle(incident.context.theme.accentColor)
                     }
 
                     // Inline add note
@@ -728,7 +682,7 @@ struct IncidentDetailView: View {
                                 VStack(spacing: 0) {
                                     Image(systemName: entry.entryType.icon)
                                         .font(.caption)
-                                        .foregroundStyle(.blue)
+                                        .foregroundStyle(incident.context.theme.accentColor)
                                         .frame(width: 20, height: 20)
                                     if index < displayedLog.count - 1 {
                                         Rectangle()
@@ -747,7 +701,7 @@ struct IncidentDetailView: View {
                                             .font(.caption2)
                                             .padding(.horizontal, 5)
                                             .padding(.vertical, 1)
-                                            .background(.blue.opacity(0.08))
+                                            .background(incident.context.theme.accentColor.opacity(0.08))
                                             .clipShape(Capsule())
                                         Text(entry.timestamp.relativeFormatted)
                                             .font(.caption)
@@ -766,7 +720,7 @@ struct IncidentDetailView: View {
                             }
                             .font(.caption)
                             .buttonStyle(.plain)
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(incident.context.theme.accentColor)
                         }
                     }
                 }
@@ -952,7 +906,7 @@ struct ReportCard: View {
             VStack(alignment: .leading, spacing: 8) {
                 Image(systemName: "doc.text")
                     .font(.title2)
-                    .foregroundStyle(.blue)
+                    .foregroundStyle(report.context.theme.accentColor)
                 Text(report.title.isEmpty ? "Untitled" : report.title)
                     .font(.body)
                     .fontWeight(.medium)

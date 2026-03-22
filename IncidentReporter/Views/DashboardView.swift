@@ -202,7 +202,7 @@ struct DashboardView: View {
                                     let maxCount = contextBreakdown.map(\.1).max() ?? 1
                                     let pct = CGFloat(count) / CGFloat(maxCount)
                                     RoundedRectangle(cornerRadius: 3)
-                                        .fill(.red.opacity(0.2))
+                                        .fill((IncidentCategory(rawValue: ctx)?.theme.accentColor ?? .red).opacity(0.2))
                                         .frame(width: geo.size.width * pct)
                                 }
                                 .frame(width: 100, height: 14)
